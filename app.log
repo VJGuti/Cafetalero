@@ -1,0 +1,4 @@
+{"level":"info","message":"Conectando a la base de datos en localhost con el usuario Admin","timestamp":"2025-02-26T16:49:00.754Z"}
+{"level":"info","message":"Servidor corriendo en http://localhost:3000","timestamp":"2025-02-26T16:49:00.814Z"}
+2025-02-26 13:00:19 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-02-26 13:00:19 info: Servidor corriendo en http://localhost:3000
