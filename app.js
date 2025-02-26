@@ -4,15 +4,16 @@ const express = require('express');
 const cors = require('cors');
 
 // Acceder a las variables de entorno
-const PORT = process.env.PORT || 5000; // Usa el puerto definido en .env o un valor por defecto
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbHost = process.env.DB_HOST;
+const DB_HOST = process.env.DB_HOST;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_NAME = process.env.DB_NAME;
+const PORT = process.env.PORT;
 
-const inventarioRoutes = require('./routes/inventarioRoutes');
-const ventasRoutes = require('./routes/ventasRoutes');
-const informesRoutes = require('./routes/informesRoutes');
-const errorHandler = require('./middleware/errorMiddleware');
+const inventarioRoutes = require('./backEnd/routes/inventarioRoutes');
+const ventasRoutes = require('./backEnd/routes/ventasRoutes');
+const informesRoutes = require('./backEnd/routes/informesRoutes');
+const errorHandler = require('./backEnd/middleware/errorMiddleware');
 
 // Crear la aplicación Express
 const app = express();
@@ -30,7 +31,7 @@ app.use('/api/informes', informesRoutes);
 app.use(errorHandler);
 
 
-console.log(`Conectando a la base de datos en ${dbHost} con el usuario ${dbUser}`);
+console.log(`Conectando a la base de datos en ${DB_HOST} con el usuario ${DB_USER}`);
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
