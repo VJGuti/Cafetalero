@@ -1,0 +1,85 @@
+/* src/styles.css */
+
+/* Variables globales */
+:root {
+    --primary-color: #795548; /* Color principal de la página */
+    --icon-color: #19551C; /* Color para los íconos */
+    --header-color: #FFFFFF; /* Color del encabezado */
+    --text-color: #000000; /* Color del texto */
+    --font-family: 'Open Sans', sans-serif; /* Tipografía */
+}
+
+/* Estilos globales */
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--header-color);
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+    width: 100px;
+    height: auto;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 120px); /* Restar el alto del encabezado y pie de página */
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--primary-color);
+    padding: 1rem;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar a {
+    display: block;
+    color: var(--header-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: var(--icon-color);
+    color: var(--header-color);
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: var(--header-color);
+    padding: 1rem;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer .logo {
+    width: 100px;
+    height: auto;
+}
