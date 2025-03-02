@@ -10,6 +10,30 @@ exports.obtenerSemillas = async () => {
         throw new Error('Error al obtener las semillas');
     }
 };
+exports.filtrarSemillas = async (tipo, stockMin, stockMax, fechaCaducidad) => {
+    let query = 'SELECT * FROM semillas WHERE 1=1';
+    const params = [];
+
+    if (tipo) {
+        query += ' AND tipo = ?';
+        params.push(tipo);
+    }
+    if (stockMin !== undefined) {
+        query += ' AND stock >= ?';
+        params.push(stockMin);
+    }
+    if (stockMax !== undefined) {
+        query += ' AND stock <= ?';
+        params.push(stockMax);
+    }
+    if (fechaCaducidad) {
+        query += ' AND fecha_caducidad <= ?';
+        params.push(fechaCaducidad);
+    }
+
+    const [rows] = await db.query(query, params);
+    return rows;
+};
 
 // Obtener semillas paginadas
 exports.obtenerSemillasPaginadas = async (limit = 10, offset = 0) => {

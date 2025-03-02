@@ -7,6 +7,8 @@ function Inventario() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterType, setFilterType] = useState('todos'); // Estado para el filtro de tipo
+    const [stockFilter, setStockFilter] = useState('todos'); // Estado para el filtro de stock
 
     useEffect(() => {
         fetchSemillas();
@@ -34,10 +36,18 @@ function Inventario() {
         }
     };
 
-    const filteredSemillas = semillas.filter(semilla => 
-        semilla.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        semilla.tipo.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredSemillas = semillas.filter(semilla => {
+        const matchesSearch = semilla.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              semilla.tipo.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesType = filterType === 'todos' || semilla.tipo.toLowerCase() === filterType.toLowerCase();
+        const matchesStock =
+            stockFilter === 'todos' ||
+            (stockFilter === 'bajo' && semilla.stock <= 50) ||
+            (stockFilter === 'medio' && semilla.stock > 50 && semilla.stock <= 100) ||
+            (stockFilter === 'alto' && semilla.stock > 100);
+
+        return matchesSearch && matchesType && matchesStock;
+    });
 
     const getStockClass = (stock) => {
         if (stock <= 50) return 'text-red-600 font-medium';
@@ -64,11 +74,60 @@ function Inventario() {
                         />
                     </div>
                     
-                    <button className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                        <Filter size={18} />
-                        <span>Filtrar</span>
-                    </button>
-                    
+                    {/* Filtro por tipo */}
+                    <div className="relative">
+                        <button
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                            onClick={() => document.getElementById('filter-menu').classList.toggle('hidden')}
+                        >
+                            <Filter size={18} />
+                            <span>Filtrar</span>
+                        </button>
+                        <div
+                            id="filter-menu"
+                            className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10"
+                        >
+                            <div className="py-1">
+                                <button
+                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'todos' ? 'bg-gray-100' : ''}`}
+                                    onClick={() => setFilterType('todos')}
+                                >
+                                    Todos los tipos
+                                </button>
+                                <button
+                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'hortalizas' ? 'bg-gray-100' : ''}`}
+                                    onClick={() => setFilterType('hortalizas')}
+                                >
+                                    Hortalizas
+                                </button>
+                                <button
+                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'flores' ? 'bg-gray-100' : ''}`}
+                                    onClick={() => setFilterType('flores')}
+                                >
+                                    Flores
+                                </button>
+                                <button
+                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'aromaticas' ? 'bg-gray-100' : ''}`}
+                                    onClick={() => setFilterType('aromaticas')}
+                                >
+                                    Aromáticas
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Filtro por stock */}
+                    <select
+                        value={stockFilter}
+                        onChange={(e) => setStockFilter(e.target.value)}
+                        className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    >
+                        <option value="todos">Todos los niveles de stock</option>
+                        <option value="bajo">Bajo (≤ 50)</option>
+                        <option value="medio">Medio (51 - 100)</option>
+                        <option value="alto">Alto (&gt 100)</option>
+                    </select>
+
                     <button className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
                         <Plus size={18} />
                         <span>Agregar</span>
@@ -131,7 +190,7 @@ function Inventario() {
                                 ) : (
                                     <tr>
                                         <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                                            No se encontraron semillas que coincidan con la búsqueda
+                                            No se encontraron semillas que coincidan con los filtros
                                         </td>
                                     </tr>
                                 )}
