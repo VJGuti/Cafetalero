@@ -35,3 +35,14 @@ exports.generarInformeVentas = async (req, res) => {
         throw new Error('Error al generar el informe de ventas');
     }
 };
+exports.obtenerAlertas = async (req, res) => {
+    try {
+        const [rows] = await db.query(`
+            SELECT * FROM semillas 
+            WHERE stock < 50 OR fecha_caducidad <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+        `);
+        res.json(rows);
+    } catch (error) {
+        throw new Error('Error al obtener alertas');
+    }
+};

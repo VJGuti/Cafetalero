@@ -1,29 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { BarChart3, AlertTriangle, Package, TrendingUp, Users } from 'lucide-react';
 
 function PanelControl() {
-    // Datos de ejemplo para el panel
-    const alertas = [
-        { id: 1, tipo: 'Stock bajo', mensaje: 'Semillas de tomate por debajo del mínimo', nivel: 'alto' },
-        { id: 2, tipo: 'Caducidad', mensaje: 'Semillas de lechuga próximas a caducar', nivel: 'medio' },
-        { id: 3, tipo: 'Pedido pendiente', mensaje: 'Confirmar llegada de semillas de zanahoria', nivel: 'bajo' },
-    ];
+    const [alertas, setAlertas] = useState([]);
+    const [estadisticas, setEstadisticas] = useState([]);
 
-    const estadisticas = [
-        { titulo: 'Total de Semillas', valor: '1,245', icono: <Package size={24} />, color: 'bg-blue-500' },
-        { titulo: 'Ventas del Mes', valor: '$8,390', icono: <TrendingUp size={24} />, color: 'bg-green-500' },
-        { titulo: 'Clientes Activos', valor: '64', icono: <Users size={24} />, color: 'bg-purple-500' },
-        { titulo: 'Alertas Activas', valor: '3', icono: <AlertTriangle size={24} />, color: 'bg-amber-500' },
-    ];
+    useEffect(() => {
+        // Obtener alertas
+        axios.get('http://localhost:3000/api/informes/alertas')
+            .then(response => setAlertas(response.data))
+            .catch(error => console.error('Error al cargar alertas:', error));
+
+        // Obtener estadísticas (simulado)
+        axios.get('http://localhost:5000/api/informes/estadisticas')
+            .then(response => setEstadisticas(response.data))
+            .catch(error => console.error('Error al cargar estadísticas:', error));
+    }, []);
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-2xl font-bold text-gray-800">Panel de Control</h1>
-                <div className="text-sm text-gray-500">
-                    Última actualización: {new Date().toLocaleDateString()}
-                </div>
-            </div>
+            <h1 className="text-2xl font-bold text-gray-800">Panel de Control</h1>
 
             {/* Tarjetas de estadísticas */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -40,28 +37,13 @@ function PanelControl() {
                 ))}
             </div>
 
-            {/* Gráfico y alertas */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Gráfico */}
-                <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-gray-800">Resumen de Inventario</h2>
-                        <BarChart3 size={20} className="text-gray-500" />
-                    </div>
-                    <div className="h-64 flex items-center justify-center bg-gray-50 rounded">
-                        <p className="text-gray-500">Gráfico de distribución de inventario por tipo de semilla</p>
-                    </div>
-                </div>
-
-                {/* Alertas */}
-                <div className="bg-white rounded-lg shadow p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-gray-800">Alertas Activas</h2>
-                        <AlertTriangle size={20} className="text-amber-500" />
-                    </div>
-                    <div className="space-y-4">
+            {/* Alertas */}
+            <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold text-gray-800">Alertas Activas</h2>
+                {alertas.length > 0 ? (
+                    <ul className="space-y-4 mt-4">
                         {alertas.map(alerta => (
-                            <div 
+                            <li 
                                 key={alerta.id} 
                                 className={`p-3 rounded-lg border-l-4 ${
                                     alerta.nivel === 'alto' ? 'border-red-500 bg-red-50' : 
@@ -71,10 +53,12 @@ function PanelControl() {
                             >
                                 <div className="font-medium">{alerta.tipo}</div>
                                 <div className="text-sm text-gray-600">{alerta.mensaje}</div>
-                            </div>
+                            </li>
                         ))}
-                    </div>
-                </div>
+                    </ul>
+                ) : (
+                    <p className="text-gray-500">No hay alertas activas.</p>
+                )}
             </div>
         </div>
     );
