@@ -1,6 +1,9 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
+
+
 import PanelControl from './components/PanelControl';
 import Inventario from './components/Inventario';
 import Ventas from './components/Ventas';
@@ -8,6 +11,11 @@ import Informes from './components/Informes';
 import './styles.css';
 
 function App() {
+
+    
+
+
+
     return (
         <Router>
             {/* Encabezado */}
