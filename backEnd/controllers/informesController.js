@@ -46,3 +46,16 @@ exports.obtenerAlertas = async (req, res) => {
         throw new Error('Error al obtener alertas');
     }
 };
+exports.obtenerVentasPorSemilla = async (req, res) => {
+    try {
+        const [rows] = await db.query(`
+            SELECT s.nombre AS semilla, SUM(v.cantidad) AS total_vendido
+            FROM ventas v
+            JOIN semillas s ON v.semilla_id = s.id
+            GROUP BY s.nombre
+        `);
+        res.json(rows);
+    } catch (error) {
+        throw new Error('Error al obtener ventas por semilla');
+    }
+};

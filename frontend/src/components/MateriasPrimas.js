@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
 
 function MateriasPrimas() {
     const [materiasPrimas, setMateriasPrimas] = useState([]);
     const [nuevaMateria, setNuevaMateria] = useState({ nombre: '', cantidad: '', unidad_medida: '' });
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/materias-primas')
+        axios.get('http://localhost:3000/api/materias-primas')
             .then(response => setMateriasPrimas(response.data))
             .catch(error => console.error('Error al cargar materias primas:', error));
     }, []);
-
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(materiasPrimas);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Materias Primas');
+        XLSX.writeFile(workbook, 'materias_primas.xlsx');
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/materias-primas', nuevaMateria);
+            await axios.post('http://localhost:3000/api/materias-primas', nuevaMateria);
             setNuevaMateria({ nombre: '', cantidad: '', unidad_medida: '' });
             // Recargar la lista de materias primas
-            const response = await axios.get('http://localhost:5000/api/materias-primas');
+            const response = await axios.get('http://localhost:3000/api/materias-primas');
             setMateriasPrimas(response.data);
         } catch (error) {
             console.error('Error al agregar materia prima:', error);
