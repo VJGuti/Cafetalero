@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from '../axiosConfig';
 import Factura from './Factura';
 
 function RegistroVentas() {
@@ -43,7 +43,7 @@ function RegistroVentas() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/ventas', venta);
+            await axios.post('http://localhost:3000/api/ventas', venta);
             alert('Venta registrada correctamente');
 
             // Limpiar el formulario después de registrar la venta

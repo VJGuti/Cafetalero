@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { BarChart3, AlertTriangle, Package, TrendingUp, Users } from 'lucide-react';
-import { Bar } from 'chart.js/auto';
+import { Chart, BarController, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import apiClient from '../axiosConfig';
+
+Chart.register(BarController, BarElement, CategoryScale, LinearScale);
 
 function PanelControl() {
     const [alertas, setAlertas] = useState([]);
@@ -10,17 +11,17 @@ function PanelControl() {
 
     useEffect(() => {
         // Fetch alerts
-        axios.get('http://localhost:3000/api/informes/alertas')
+        apiClient.get('/api/informes/alertas')
             .then(response => setAlertas(response.data))
             .catch(error => console.error('Error al cargar alertas:', error));
 
         // Fetch statistics (simulated)
-        axios.get('http://localhost:3000/api/informes/estadisticas')
+        apiClient.get('/api/informes/estadisticas')
             .then(response => setEstadisticas(response.data))
             .catch(error => console.error('Error al cargar estadísticas:', error));
 
         // Fetch sales data
-        axios.get('http://localhost:5000/api/informes/ventas/por-semilla')
+        apiClient.get('/api/informes/ventas/por-semilla')
             .then(response => setVentasData(response.data))
             .catch(error => console.error('Error al cargar datos de ventas:', error));
     }, []);
@@ -29,7 +30,8 @@ function PanelControl() {
         if (ventasData.length > 0) {
             const ctx = document.getElementById('ventasChart')?.getContext('2d');
             if (ctx) {
-                new Bar(ctx, {
+                new Chart(ctx, {
+                    type: 'bar',
                     data: {
                         labels: ventasData.map(item => item.semilla),
                         datasets: [{

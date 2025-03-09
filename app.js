@@ -16,7 +16,7 @@ const DB_HOST = process.env.DB_HOST;
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME;
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Crear la aplicación Express
 const app = express();
@@ -33,6 +33,10 @@ app.use('/auth', authRoutes); // Rutas de autenticación
 app.use('/api/inventario', authenticateToken, inventarioRoutes); // Proteger rutas de inventario
 app.use('/api/ventas', authenticateToken, ventasRoutes); // Proteger rutas de ventas
 app.use('/api/informes', authenticateToken, informesRoutes); // Proteger rutas de informes
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Backend funcionando correctamente' });
+});
+
 
 // Ruta protegida de ejemplo
 app.get('/admin', authenticateToken, (req, res) => {

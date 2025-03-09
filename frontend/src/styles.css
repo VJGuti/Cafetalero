@@ -83,3 +83,62 @@ body {
     width: 100px;
     height: auto;
 }
+
+/* Pie de pagina */
+/* Estilos generales del footer */
+.footer {
+    display: flex;
+    justify-content: space-between; /* Alinea el contenido y el logo */
+    align-items: center; /* Centra verticalmente */
+    padding: 1rem;
+    background-color: #f3f4f6; /* Fondo claro */
+    border-top: 1px solid #e5e7eb; /* Borde superior */
+    margin-top: auto; /* Empuja el footer hacia abajo */
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos verticalmente */
+    gap: 1rem; /* Espacio entre los elementos */
+}
+
+.footer-info {
+    text-align: left; /* Alinea el texto a la izquierda */
+}
+
+.footer-text {
+    color: #0a0a0a; /* Color de texto negro */
+    font-size: 0.875rem; /* Tamaño de fuente pequeño */
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.footer-email {
+    color: #3b82f6; /* Color azul para el correo */
+    text-decoration: none; /* Quita el subrayado */
+    font-size: 0.875rem;
+}
+
+.footer-email:hover {
+    text-decoration: underline; /* Subraya el correo al pasar el mouse */
+}
+
+.footer-button {
+    background-color: #13eb25; /* Color verde */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    border-radius: 0.25rem; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    font-size: 0.875rem; /* Tamaño de fuente */
+    transition: background-color 0.2s ease; /* Efecto hover */
+}
+
+.footer-button:hover {
+    background-color: #033307; /* Oscurece el color al pasar el mouse */
+}
+
+.footer-logo {
+    height: 100px; /* Tamaño del logo */
+    width: auto; /* Mantener proporción */
+}

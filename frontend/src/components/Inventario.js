@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from '../axiosConfig';
 import { Search, Filter, Plus, RefreshCw, AlertTriangle } from 'lucide-react';
 
 function Inventario() {
@@ -17,7 +17,7 @@ function Inventario() {
     const fetchSemillas = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/inventario/semillas');
+            const response = await axios.get('http://localhost:3000/api/inventario/semillas');
             setSemillas(response.data);
             setError(null);
         } catch (error) {

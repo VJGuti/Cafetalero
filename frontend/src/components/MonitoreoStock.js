@@ -1,6 +1,6 @@
 // src/components/MonitoreoStock.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../axiosConfig';
 
 function MonitoreoStock() {
     const [movimiento, setMovimiento] = useState({

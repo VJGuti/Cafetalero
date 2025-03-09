@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { User, KeyRound } from 'lucide-react';
 
@@ -11,7 +11,7 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            const response = await axios.post('http://localhost:3000/api/auth/login', { email, password });
             localStorage.setItem('token', response.data.token); // Guardar token en localStorage
             navigate('/'); // Redirigir al panel de control
         } catch (error) {
