@@ -1,4 +1,4 @@
-const db = require('../db');
+const pool = require('../db');
 
 exports.filtrarMovimientos = async (tipoMovimiento, fechaInicio, fechaFin, semillaId) => {
     let query = 'SELECT * FROM movimientos_inventario WHERE 1=1';
@@ -17,6 +17,11 @@ exports.filtrarMovimientos = async (tipoMovimiento, fechaInicio, fechaFin, semil
         params.push(semillaId);
     }
 
-    const [rows] = await db.query(query, params);
-    return rows;
+    try {
+        const [rows] = await pool.query(query, params); // Corregido: pool.query en lugar de db.query
+        return rows;
+    } catch (error) {
+        console.error('Error al filtrar movimientos:', error.message);
+        throw new Error('Error al filtrar movimientos');
+    }
 };

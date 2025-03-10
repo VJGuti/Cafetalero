@@ -3,23 +3,22 @@ const bcrypt = require('bcryptjs');
 const { getUserByUsername } = require('../models/userModel');
 const logger = require('../logger');
 
-// Inicio de sesión
-exports.login = async (req, res) => {
-  const { username, password } = req.body;
+// Middleware para autenticar el token JWT
+exports.authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Extraer el token del encabezado "Bearer <token>"
 
-  try {
-    const user = await getUserByUsername(username);
-
-    if (!user || !bcrypt.compareSync(password, user.password_hash)) {
-      logger.warn(`Intento fallido de inicio de sesión para el usuario: ${username}`);
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-
-    const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    logger.info(`Inicio de sesión exitoso para el usuario: ${username}`);
-    res.json({ message: 'Inicio de sesión exitoso', token });
-  } catch (error) {
-    logger.error(`Error durante el inicio de sesión: ${error.message}`);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  if (!token) {
+    logger.warn('Acceso denegado. Token no proporcionado.');
+    return res.status(401).json({ error: 'Acceso denegado. Token no proporcionado.' });
   }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      logger.warn('Token inválido o expirado.');
+      return res.status(403).json({ error: 'Token inválido o expirado.' });
+    }
+    req.user = user; // Adjuntar los datos del usuario al objeto req
+    next();
+  });
 };

@@ -1,4 +1,4 @@
-const db = require('../db');
+const pool = require('../db');
 
 // Generar informe de inventario
 exports.generarInformeInventario = async (req, res) => {

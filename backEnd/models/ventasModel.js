@@ -1,5 +1,4 @@
-// backend/models/ventasModel.js
-const db = require('../db');
+const pool = require('../db');
 
 // Registrar una nueva venta
 exports.registrarVenta = async (cliente_id, semilla_id, cantidad, fecha_venta) => {

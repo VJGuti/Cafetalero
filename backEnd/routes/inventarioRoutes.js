@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const pool = require('../db');
 const inventarioController = require('../controllers/inventarioController');
+const semillasModel = require('../models/semillasModel'); // Importa el modelo
+const movimientosModel = require('../models/movimientosModel'); // Importa el modelo
 
 // Obtener todas las semillas
 router.get('/semillas', inventarioController.obtenerSemillas);
@@ -8,6 +11,7 @@ router.get('/semillas', inventarioController.obtenerSemillas);
 // Agregar una nueva semilla
 router.post('/semillas', inventarioController.agregarSemilla);
 
+// Filtrar semillas
 router.get('/semillas/filtrar', async (req, res) => {
     const { tipo, stockMin, stockMax, fechaCaducidad } = req.query;
 
@@ -18,6 +22,8 @@ router.get('/semillas/filtrar', async (req, res) => {
         throw new Error('Error al filtrar semillas');
     }
 });
+
+// Filtrar movimientos
 router.get('/movimientos/filtrar', async (req, res) => {
     const { tipoMovimiento, fechaInicio, fechaFin, semillaId } = req.query;
 

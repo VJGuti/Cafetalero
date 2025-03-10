@@ -1,9 +1,25 @@
-const db = require('../db');
+const pool = require('../db'); // Importa la conexión a la base de datos
 
-// Buscar un usuario por nombre de usuario
-async function getUserByUsername(username) {
-  const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
-  return rows[0];
+// Función para obtener un usuario por su correo electrónico
+async function getUserByEmail(email) {
+    try {
+        const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        return rows[0]; // Devuelve el primer resultado o undefined si no hay coincidencias
+    } catch (error) {
+        console.error('Error en getUserByEmail:', error.message);
+        throw error;
+    }
 }
 
-module.exports = { getUserByUsername };
+// Función para obtener un usuario por su nombre de usuario
+async function getUserByUsername(username) {
+    try {
+        const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+        return rows[0]; // Devuelve el primer resultado o undefined si no hay coincidencias
+    } catch (error) {
+        console.error('Error en getUserByUsername:', error.message);
+        throw error;
+    }
+}
+
+module.exports = { getUserByEmail, getUserByUsername };

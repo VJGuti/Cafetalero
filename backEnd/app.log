@@ -1,0 +1,121 @@
+{"level":"info","message":"Conectando a la base de datos en localhost con el usuario Admin","timestamp":"2025-02-26T16:49:00.754Z"}
+{"level":"info","message":"Servidor corriendo en http://localhost:3000","timestamp":"2025-02-26T16:49:00.814Z"}
+2025-02-26 13:00:19 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-02-26 13:00:19 info: Servidor corriendo en http://localhost:3000
+2025-03-02 14:20:55 info: Conectando a la base de datos en undefined con el usuario undefined
+2025-03-02 14:20:55 info: Servidor corriendo en http://localhost:3000
+2025-03-02 19:31:13 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-02 19:31:13 info: Servidor corriendo en http://localhost:3000
+2025-03-08 11:30:55 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 11:30:55 info: Servidor corriendo en http://localhost:3000
+2025-03-08 11:34:59 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 11:34:59 info: Servidor corriendo en http://localhost:3000
+2025-03-08 11:36:26 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 11:36:26 info: Servidor corriendo en http://localhost:3000
+2025-03-08 11:44:46 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 11:44:46 info: Servidor corriendo en http://localhost:3000
+2025-03-08 12:06:15 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 12:06:15 info: Servidor corriendo en http://localhost:3000
+2025-03-08 12:11:09 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 12:11:09 info: Servidor corriendo en http://localhost:5000
+2025-03-08 12:16:34 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 12:16:34 info: Servidor corriendo en http://localhost:5000
+2025-03-08 12:46:06 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-08 12:46:06 info: Servidor corriendo en http://localhost:5000
+2025-03-09 08:48:48 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 08:48:48 info: Servidor corriendo en http://localhost:5000
+2025-03-09 09:43:03 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 09:43:03 info: Servidor corriendo en http://localhost:5000
+2025-03-09 09:44:52 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 09:44:52 info: Servidor corriendo en http://localhost:5000
+2025-03-09 10:10:01 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 10:10:49 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 10:11:11 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 10:11:53 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 10:35:14 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 10:36:17 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 10:36:29 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 11:11:59 error: Error durante el inicio de sesión: Access denied for user 'Admin'@'localhost' (using password: YES)
+2025-03-09 12:16:15 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 12:16:15 info: Servidor corriendo en http://localhost:5000
+2025-03-09 12:30:40 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 12:30:40 info: Servidor corriendo en http://localhost:5000
+2025-03-09 12:46:43 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 12:46:43 info: Servidor corriendo en http://localhost:5000
+2025-03-09 12:48:15 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 12:48:15 info: Servidor corriendo en http://localhost:5000
+2025-03-09 13:08:16 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 13:08:16 info: Servidor corriendo en http://localhost:5000
+2025-03-09 13:11:45 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 13:11:45 info: Servidor corriendo en http://localhost:5000
+2025-03-09 13:18:26 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 13:18:26 info: Servidor corriendo en http://localhost:5000
+2025-03-09 13:39:13 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 13:39:13 info: Servidor corriendo en http://localhost:5000
+2025-03-09 14:22:20 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 14:22:20 info: Servidor corriendo en http://localhost:5000
+2025-03-09 14:51:03 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 14:51:03 info: Servidor corriendo en http://localhost:5000
+2025-03-09 14:55:30 warn: Acceso denegado: Token no proporcionado
+2025-03-09 15:05:22 warn: Acceso denegado: Token inválido o expirado
+2025-03-09 15:05:45 warn: Acceso denegado: Token inválido o expirado
+2025-03-09 15:06:34 warn: Acceso denegado: Token inválido o expirado
+2025-03-09 15:06:41 warn: Acceso denegado: Token inválido o expirado
+2025-03-09 15:06:46 warn: Acceso denegado: Token inválido o expirado
+2025-03-09 16:16:01 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 16:16:01 info: Servidor corriendo en http://localhost:5000
+2025-03-09 16:16:37 warn: Token inválido o expirado.
+2025-03-09 16:16:48 warn: Token inválido o expirado.
+2025-03-09 16:19:06 warn: Token inválido o expirado.
+2025-03-09 16:46:19 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 16:46:19 info: Servidor corriendo en http://localhost:5000
+2025-03-09 16:57:59 warn: Token inválido o expirado.
+2025-03-09 18:04:15 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 18:04:15 info: Servidor corriendo en http://localhost:5000
+2025-03-09 18:09:38 warn: Token inválido o expirado.
+2025-03-09 18:16:24 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 18:16:24 info: Servidor corriendo en http://localhost:5000
+2025-03-09 18:16:59 warn: Token inválido o expirado.
+2025-03-09 18:17:05 warn: Token inválido o expirado.
+2025-03-09 18:17:09 warn: Token inválido o expirado.
+2025-03-09 18:30:40 warn: Token inválido o expirado.
+2025-03-09 18:43:42 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 18:43:42 info: Servidor corriendo en http://localhost:5000
+2025-03-09 18:44:18 warn: Token inválido o expirado.
+2025-03-09 19:01:49 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 19:01:49 info: Servidor corriendo en http://localhost:5000
+2025-03-09 19:02:09 warn: Token inválido o expirado.
+2025-03-09 19:06:13 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 19:06:13 info: Servidor corriendo en http://localhost:5000
+2025-03-09 19:09:10 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 19:09:10 info: Servidor corriendo en http://localhost:5000
+2025-03-09 19:09:16 warn: Token inválido o expirado.
+2025-03-09 19:17:46 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 19:17:46 info: Servidor corriendo en http://localhost:5000
+2025-03-09 19:21:19 warn: Token inválido o expirado.
+2025-03-09 19:30:55 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 19:30:55 info: Servidor corriendo en http://localhost:5000
+2025-03-09 19:32:00 warn: Token inválido o expirado.
+2025-03-09 19:32:29 warn: Acceso denegado. Token no proporcionado.
+2025-03-09 19:33:11 warn: Token inválido o expirado.
+2025-03-09 19:33:16 warn: Token inválido o expirado.
+2025-03-09 19:33:18 warn: Token inválido o expirado.
+2025-03-09 20:01:27 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 20:01:27 info: Servidor corriendo en http://localhost:5000
+2025-03-09 20:02:15 warn: Token inválido o expirado.
+2025-03-09 20:11:23 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 20:11:23 info: Servidor corriendo en http://localhost:5000
+2025-03-09 20:11:49 warn: Token inválido o expirado.
+2025-03-09 20:16:21 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 20:16:21 info: Servidor corriendo en http://localhost:5000
+2025-03-09 20:16:56 warn: Token inválido o expirado.
+2025-03-09 20:21:36 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 20:21:36 info: Servidor corriendo en http://localhost:5000
+2025-03-09 20:25:01 warn: Token inválido o expirado.
+2025-03-09 20:32:02 warn: Token inválido o expirado.
+2025-03-09 20:46:55 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 20:46:55 info: Servidor corriendo en http://localhost:5000
+2025-03-09 20:46:55 info: Conexión exitosa a la base de datos
+2025-03-09 20:46:55 info: Resultado de la prueba de conexión: 2
+2025-03-09 20:47:30 warn: Token inválido o expirado.
+2025-03-09 20:47:38 warn: Token inválido o expirado.

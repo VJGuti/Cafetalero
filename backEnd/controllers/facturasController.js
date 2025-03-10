@@ -1,6 +1,5 @@
-// backend/controllers/facturasController.js
 const pdfMake = require('pdfmake');
-const db = require('../db');
+const pool = require('../db');
 
 // Configuración de fuentes para pdfmake
 const fonts = {

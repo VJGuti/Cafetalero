@@ -1,4 +1,4 @@
-const db = require('../db');
+const pool = require('../db');
 
 // Obtener todas las materias primas
 exports.obtenerMateriasPrimas = async () => {
