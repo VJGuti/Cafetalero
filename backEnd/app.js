@@ -22,7 +22,10 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Solo permite solicitudes desde el frontend
+  credentials: true, // Habilita el envío de cookies o tokens en las solicitudes
+}));
 app.use(express.json());
 
 // Logging inicial

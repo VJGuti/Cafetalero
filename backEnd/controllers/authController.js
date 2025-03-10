@@ -3,16 +3,30 @@ const logger = require('../logger');
 require('dotenv').config();
 
 exports.authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Extraer el token del encabezado "Bearer <token>"
+  // Log para mostrar todos los encabezados recibidos
+  console.log('Todos los encabezados recibidos:', req.headers);
 
+  // Leer el encabezado "Authorization" (insensible a mayúsculas/minúsculas)
+  const authHeader = req.headers['Authorization'] || req.headers['authorization'];
+  console.log('Encabezado Authorization:', authHeader);
+
+  // Verificar si el encabezado "Authorization" existe
+  if (!authHeader) {
+    logger.warn('Acceso denegado. Encabezado Authorization no encontrado.');
+    return res.status(401).json({ error: 'Acceso denegado. Encabezado Authorization no encontrado.' });
+  }
+
+  // Extraer el token del encabezado "Bearer <token>"
+  const token = authHeader.split(' ')[1];
   if (!token) {
     logger.warn('Acceso denegado. Token no proporcionado.');
     return res.status(401).json({ error: 'Acceso denegado. Token no proporcionado.' });
   }
 
-  logger.info(`Token recibido: ${token}`);
+  // Log para mostrar el token extraído
+  console.log('Token extraído:', token);
 
+  // Verificar el token utilizando la clave secreta
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       logger.error(`Error al verificar el token: ${err.message}`);
@@ -20,6 +34,7 @@ exports.authenticateToken = (req, res, next) => {
       return res.status(403).json({ error: 'Token inválido o expirado.' });
     }
 
+    // Log para mostrar la hora actual del servidor
     const currentTime = Math.floor(Date.now() / 1000); // Hora actual del servidor en segundos
     logger.info(`Hora actual del servidor: ${currentTime}`);
     logger.info(`Token válido. Usuario: ${user.username}, iat: ${user.iat}, exp: ${user.exp}`);
@@ -35,14 +50,17 @@ exports.authenticateToken = (req, res, next) => {
       return res.status(403).json({ error: 'Token expirado.' });
     }
 
-    // Verificar si el usuario es "Admin"
-    if (user.username !== 'Admin') {
+    // Verificar si el usuario tiene el rol de "Admin"
+    if (user.username.toLowerCase() !== 'admin') { // Comparación insensible a mayúsculas/minúsculas
       logger.warn(`Acceso denegado. El usuario ${user.username} no tiene permisos de administrador.`);
       return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de administrador.' });
     }
 
-    req.user = user; // Adjuntar los datos del usuario al objeto req
+    // Adjuntar los datos del usuario al objeto req
+    req.user = user;
     next();
   });
+
+  // Log para mostrar la clave secreta utilizada en la verificación
   console.log('JWT_SECRET (verificación):', process.env.JWT_SECRET);
 };

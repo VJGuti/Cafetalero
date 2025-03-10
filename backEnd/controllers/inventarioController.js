@@ -1,5 +1,6 @@
 const semillasModel = require('../models/semillasModel');
 const Joi = require('joi');
+const pool = require('../db');
 
 // Esquema de validación para agregar una semilla
 const semillaSchema = Joi.object({

@@ -1,0 +1,3 @@
+2025-03-10 09:20:08 UTC-4 info: "Conectando a la base de datos en undefined con el usuario undefined"
+2025-03-10 09:20:08 UTC-4 info: "Servidor corriendo en http://localhost:5000"
+2025-03-10 09:20:08 UTC-4 error: "Error al conectar a la base de datos: Access denied for user ''@'localhost' (using password: NO)"
