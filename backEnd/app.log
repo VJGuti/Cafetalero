@@ -119,3 +119,79 @@
 2025-03-09 20:46:55 info: Resultado de la prueba de conexión: 2
 2025-03-09 20:47:30 warn: Token inválido o expirado.
 2025-03-09 20:47:38 warn: Token inválido o expirado.
+2025-03-09 20:57:45 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 20:57:45 info: Servidor corriendo en http://localhost:5000
+2025-03-09 20:57:45 info: Conexión exitosa a la base de datos
+2025-03-09 20:57:45 info: Resultado de la prueba de conexión: 2
+2025-03-09 21:14:38 warn: Token inválido o expirado.
+2025-03-09 21:28:25 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 21:28:25 info: Servidor corriendo en http://localhost:5000
+2025-03-09 21:28:25 info: Conexión exitosa a la base de datos
+2025-03-09 21:28:25 info: Resultado de la prueba de conexión: 2
+2025-03-09 21:28:45 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczNTY4OTYwMCwiZXhwIjoxODMwNDg5NjAwfQ.QlBRGD6L9tRn5GOFZ7JertEFtaTqRv7RkK4mqTTJ108>
+2025-03-09 21:28:45 error: Error al verificar el token: invalid token
+2025-03-09 21:28:45 error: Detalles del error: {"name":"JsonWebTokenError","message":"invalid token"}
+2025-03-09 21:28:48 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczNTY4OTYwMCwiZXhwIjoxODMwNDg5NjAwfQ.QlBRGD6L9tRn5GOFZ7JertEFtaTqRv7RkK4mqTTJ108>
+2025-03-09 21:28:48 error: Error al verificar el token: invalid token
+2025-03-09 21:28:48 error: Detalles del error: {"name":"JsonWebTokenError","message":"invalid token"}
+2025-03-09 21:29:09 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 21:29:09 info: Servidor corriendo en http://localhost:5000
+2025-03-09 21:29:09 info: Conexión exitosa a la base de datos
+2025-03-09 21:29:09 info: Resultado de la prueba de conexión: 2
+2025-03-09 21:29:26 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczNTY4OTYwMCwiZXhwIjoxODMwNDg5NjAwfQ.QlBRGD6L9tRn5GOFZ7JertEFtaTqRv7RkK4mqTTJ108>
+2025-03-09 21:29:26 error: Error al verificar el token: invalid token
+2025-03-09 21:29:26 error: Detalles del error: {"name":"JsonWebTokenError","message":"invalid token"}
+2025-03-09 21:39:41 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 21:39:41 info: Servidor corriendo en http://localhost:5000
+2025-03-09 21:39:41 info: Conexión exitosa a la base de datos
+2025-03-09 21:39:41 info: Resultado de la prueba de conexión: 2
+2025-03-09 21:40:28 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NDE1NzA3OTEsImV4cCI6MTgzNjI0MzU5MX0.s1Lx_joOyyvvXzwTZJDqd-pZYFXQoCgykRFhJA1vN0k>
+2025-03-09 21:40:28 error: Error al verificar el token: invalid token
+2025-03-09 21:40:28 error: Detalles del error: {
+  "name": "JsonWebTokenError",
+  "message": "invalid token"
+}
+2025-03-09 21:53:02 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 21:53:03 info: Servidor corriendo en http://localhost:5000
+2025-03-09 21:53:03 info: Conexión exitosa a la base de datos
+2025-03-09 21:53:03 info: Resultado de la prueba de conexión: 2
+2025-03-09 21:53:28 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NDE1NzE1OTQsImV4cCI6MTgzNjI0NDM5NH0.oNdNWU-6UECNux5vO-b4MV_F6M8zEIFDBcUBdWYl1kU>
+2025-03-09 21:53:28 error: Error al verificar el token: invalid token
+2025-03-09 21:53:28 error: Detalles del error: {
+  "name": "JsonWebTokenError",
+  "message": "invalid token"
+}
+2025-03-09 21:57:53 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 21:57:53 info: Servidor corriendo en http://localhost:5000
+2025-03-09 21:57:53 info: Conexión exitosa a la base de datos
+2025-03-09 21:57:53 info: Resultado de la prueba de conexión: 2
+2025-03-09 21:58:57 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NDE1NzE5MDcsImV4cCI6MTgzNjI0NDcwN30.8XGInvO9VH-dgnOnt9a2r4B7g_xteXLy4_bY3jAqLyE>
+2025-03-09 21:58:57 error: Error al verificar el token: invalid token
+2025-03-09 21:58:57 error: Detalles del error: {
+  "name": "JsonWebTokenError",
+  "message": "invalid token"
+}
+2025-03-09 21:59:33 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 21:59:33 info: Servidor corriendo en http://localhost:5000
+2025-03-09 21:59:33 info: Conexión exitosa a la base de datos
+2025-03-09 21:59:33 info: Resultado de la prueba de conexión: 2
+2025-03-09 21:59:58 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NDE1NzE5ODQsImV4cCI6MTgzNjI0NDc4NH0.9V_Hd5SHITPX8iwS8DlqzUhpdspwPvG2KmhKsaxVNbk>
+2025-03-09 21:59:58 error: Error al verificar el token: invalid token
+2025-03-09 21:59:58 error: Detalles del error: {
+  "name": "JsonWebTokenError",
+  "message": "invalid token"
+}
+2025-03-09 22:16:06 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 22:16:06 info: Servidor corriendo en http://localhost:5000
+2025-03-09 22:16:06 info: Conexión exitosa a la base de datos
+2025-03-09 22:16:06 info: Resultado de la prueba de conexión: 2
+2025-03-09 22:17:59 info: Conectando a la base de datos en localhost con el usuario Admin
+2025-03-09 22:17:59 info: Servidor corriendo en http://localhost:5000
+2025-03-09 22:17:59 info: Conexión exitosa a la base de datos
+2025-03-09 22:17:59 info: Resultado de la prueba de conexión: 2
+2025-03-09 22:18:04 info: Token recibido: <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NDE1NzE5ODQsImV4cCI6MTgzNjI0NDc4NH0.9V_Hd5SHITPX8iwS8DlqzUhpdspwPvG2KmhKsaxVNbk>
+2025-03-09 22:18:04 error: Error al verificar el token: invalid token
+2025-03-09 22:18:04 error: Detalles del error: {
+  "name": "JsonWebTokenError",
+  "message": "invalid token"
+}

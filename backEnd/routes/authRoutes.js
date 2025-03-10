@@ -26,18 +26,6 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Credenciales incorrectas' });
         }
 
-        // Prueba de comparación de contraseñas (para depuración)
-        const plainPassword = 'mypassword*'; // Contraseña en texto plano
-        const storedHash = user.password_hash; // Hash almacenado en la base de datos
-
-        bcrypt.compare(plainPassword, storedHash, (err, isMatch) => {
-            if (err) {
-                console.error('Error al comparar contraseñas:', err.message);
-            } else {
-                console.log('Resultado de la comparación (prueba):', isMatch);
-            }
-        });
-
         // Compara la contraseña usando await
         const isMatch = await bcrypt.compare(password, user.password_hash);
         console.log('Resultado de la comparación de contraseñas:', isMatch); // Imprime el resultado
@@ -46,17 +34,15 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Credenciales incorrectas' });
         }
 
-        // Fechas específicas en segundos
-        const iat = 1735689600; // 1 de enero de 2025
-        const exp = 1830489600; // 1 de enero de 2028
-
-        // Genera un token JWT con fechas específicas
+        // Genera un token JWT con una duración de 3 años
         const token = jwt.sign(
-            { userId: user.id, iat, exp }, // Incluir iat y exp en el payload
-            process.env.JWT_SECRET
+          { userId: user.id, username: user.username }, // Incluir el ID y nombre de usuario en el payload
+          process.env.JWT_SECRET,
+          { expiresIn: '3y' } // Duración del token: 3 años
         );
 
-        console.log('Token generado:', token);
+        console.log('JWT_SECRET:', process.env.JWT_SECRET); // Imprime la clave secreta
+        console.log('Token generado:', token); // Imprime el token generado
 
         // Envía el token como respuesta
         res.json({ message: 'Inicio de sesión exitoso', token });
@@ -65,5 +51,7 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
+
+console.log('JWT_SECRET (generación):', process.env.JWT_SECRET);
 
 module.exports = router;

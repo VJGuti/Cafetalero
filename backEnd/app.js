@@ -39,6 +39,7 @@ db.query('SELECT 1 + 1 AS result')
     process.exit(1); // Detener el servidor si no se puede conectar a la base de datos
   });
 
+
 // Rutas
 app.use('/auth', authRoutes); // Rutas de autenticación
 app.use('/api/inventario', authenticateToken, inventarioRoutes); // Proteger rutas de inventario
