@@ -44,3 +44,12 @@ exports.agregarSemilla = async (req, res) => {
         res.status(500).json({ error: 'Error al agregar la semilla' });
     }
 };
+exports.obtenerInventario = async () => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM inventario');
+        return rows;
+    } catch (error) {
+        console.error('Error al obtener el inventario:', error.message);
+        throw new Error('Error al obtener los datos del inventario.');
+    }
+};

@@ -1,26 +1,55 @@
 import React, { useState } from 'react';
 import { FileText, Download, Calendar, BarChart3, PieChart, TrendingUp, Filter } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function Informes() {
     const [periodoSeleccionado, setPeriodoSeleccionado] = useState('mes');
-    
+
     // Datos de ejemplo para informes
     const informesDisponibles = [
-        { id: 1, nombre: 'Informe de Inventario', descripcion: 'Estado actual del inventario de semillas', icono: <FileText size={20} />, color: 'bg-blue-100 text-blue-800' },
-        { id: 2, nombre: 'Informe de Ventas', descripcion: 'Resumen de ventas por período', icono: <BarChart3 size={20} />, color: 'bg-green-100 text-green-800' },
-        { id: 3, nombre: 'Informe de Caducidad', descripcion: 'Semillas próximas a caducar', icono: <Calendar size={20} />, color: 'bg-amber-100 text-amber-800' },
-        { id: 4, nombre: 'Informe de Clientes', descripcion: 'Análisis de clientes y compras', icono: <PieChart size={20} />, color: 'bg-purple-100 text-purple-800' },
-        { id: 5, nombre: 'Informe de Tendencias', descripcion: 'Tendencias de ventas por tipo de semilla', icono: <TrendingUp size={20} />, color: 'bg-indigo-100 text-indigo-800' },
+        {
+            id: 1,
+            nombre: 'Informe de Inventario',
+            descripcion: 'Estado actual del inventario de semillas',
+            icono: <FileText size={20} />,
+            color: 'bg-blue-100 text-blue-800',
+            datos: [
+                { nombre: 'Tomate Cherry', tipo: 'Hortalizas', stock: 120, fecha_caducidad: '2025-06-15' },
+                { nombre: 'Lechuga Romana', tipo: 'Hortalizas', stock: 85, fecha_caducidad: '2025-04-20' },
+            ],
+        },
+        {
+            id: 2,
+            nombre: 'Informe de Ventas',
+            descripcion: 'Resumen de ventas por período',
+            icono: <BarChart3 size={20} />,
+            color: 'bg-green-100 text-green-800',
+            datos: [
+                { cliente: 'Agrícola San José', fecha: '2023-05-15', total: 1250.00 },
+                { cliente: 'Vivero El Edén', fecha: '2023-05-12', total: 850.75 },
+            ],
+        },
+        // Agrega más informes aquí...
     ];
 
     // Función para exportar a Excel
     const exportToExcel = (data, fileName) => {
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Hoja1');
-        XLSX.writeFile(workbook, `${fileName}.xlsx`);
+        if (!data || data.length === 0) {
+            console.error('No hay datos para exportar.');
+            alert('No hay datos disponibles para descargar.');
+            return;
+        }
+
+        try {
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Hoja1');
+            XLSX.writeFile(workbook, `${fileName}.xlsx`);
+        } catch (error) {
+            console.error('Error al exportar a Excel:', error.message);
+            alert('Ocurrió un error al descargar el archivo.');
+        }
     };
 
     return (
@@ -30,12 +59,10 @@ function Informes() {
                 <h1 className="text-2xl font-bold text-gray-800">Informes y Estadísticas</h1>
                 <div className="flex flex-wrap gap-3">
                     <div className="flex items-center bg-white border border-gray-300 rounded-md overflow-hidden">
-                        {[{value: 'semana'}, {value: 'mes'}, {value: 'año'}].map(periodo => (
-                            <button 
+                        {[{ value: 'semana' }, { value: 'mes' }, { value: 'año' }].map((periodo) => (
+                            <button
                                 key={periodo.value}
-                                className={`px-4 py-2 ${periodoSeleccionado === periodo.value 
-                                    ? 'bg-green-600 text-white' 
-                                    : 'hover:bg-gray-50'}`}
+                                className={`px-4 py-2 ${periodoSeleccionado === periodo.value ? 'bg-green-600 text-white' : 'hover:bg-gray-50'}`}
                                 onClick={() => setPeriodoSeleccionado(periodo.value)}
                             >
                                 {periodo.value.charAt(0).toUpperCase() + periodo.value.slice(1)}
@@ -77,7 +104,7 @@ function Informes() {
                     <h2 className="text-lg font-semibold text-gray-800">Informes Disponibles</h2>
                 </div>
                 <div className="divide-y divide-gray-200">
-                    {informesDisponibles.map(informe => (
+                    {informesDisponibles.map((informe) => (
                         <div key={informe.id} className="p-6 hover:bg-gray-50 transition-colors">
                             <div className="flex items-start justify-between">
                                 <div className="flex items-start space-x-4">
@@ -96,7 +123,7 @@ function Informes() {
                                             <span>Ver</span>
                                         </button>
                                     </Link>
-                                    <button 
+                                    <button
                                         className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
                                         onClick={() => exportToExcel(informe.datos, informe.nombre)}
                                     >

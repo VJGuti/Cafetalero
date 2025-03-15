@@ -34,5 +34,14 @@ router.get('/movimientos/filtrar', async (req, res) => {
         throw new Error('Error al filtrar movimientos');
     }
 });
+router.get('/inventario', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM inventario');
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener el inventario:', error.message);
+        res.status(500).json({ error: 'No se pudieron cargar los datos del inventario.' });
+    }
+});
 
 module.exports = router;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import apiClient from '../axiosConfig';
-import { Search, Filter, Plus, RefreshCw, AlertTriangle } from 'lucide-react';
+import axios from 'axios';
+import { Search, Filter, Plus, RefreshCw, AlertTriangle, Edit, Trash2 } from 'lucide-react';
 
 function Inventario() {
     const [semillas, setSemillas] = useState([]);
@@ -25,27 +25,45 @@ function Inventario() {
             setError('No se pudieron cargar los datos. Intente nuevamente más tarde.');
             // Datos de ejemplo para visualización en caso de error
             setSemillas([
-                { id: 1, nombre: 'Tomate Cherry', tipo: 'Hortalizas', stock: 120, fecha_caducidad: '2025-06-15' },
-                { id: 2, nombre: 'Lechuga Romana', tipo: 'Hortalizas', stock: 85, fecha_caducidad: '2025-04-20' },
-                { id: 3, nombre: 'Zanahoria', tipo: 'Hortalizas', stock: 200, fecha_caducidad: '2025-08-10' },
-                { id: 4, nombre: 'Girasol', tipo: 'Flores', stock: 50, fecha_caducidad: '2025-05-30' },
-                { id: 5, nombre: 'Albahaca', tipo: 'Aromáticas', stock: 75, fecha_caducidad: '2024-12-25' },
+                { id: 1, nombre: 'Café Arábica', tipo: 'Arábica', stock: 120, fecha_caducidad: '2025-06-15' },
+                { id: 2, nombre: 'Café Robusta', tipo: 'Robusta', stock: 85, fecha_caducidad: '2025-04-20' },
+                { id: 3, nombre: 'Café Excelsa', tipo: 'Excelsa', stock: 200, fecha_caducidad: '2025-08-10' },
+                { id: 4, nombre: 'Café Liberica', tipo: 'Liberica', stock: 50, fecha_caducidad: '2025-05-30' },
             ]);
         } finally {
             setLoading(false);
         }
     };
 
-    const filteredSemillas = semillas.filter(semilla => {
-        const matchesSearch = semilla.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              semilla.tipo.toLowerCase().includes(searchTerm.toLowerCase());
+    // Función para eliminar una semilla
+    const handleDelete = async (id) => {
+        if (window.confirm('¿Estás seguro de que deseas eliminar esta semilla?')) {
+            try {
+                await axios.delete(`http://localhost:3000/api/inventario/semillas/${id}`);
+                setSemillas(semillas.filter((semilla) => semilla.id !== id));
+                alert('Semilla eliminada correctamente.');
+            } catch (error) {
+                console.error('Error al eliminar semilla:', error);
+                alert('Ocurrió un error al eliminar la semilla.');
+            }
+        }
+    };
+
+    // Función para editar una semilla
+    const handleEdit = (id) => {
+        alert(`Editar semilla con ID ${id}. Implementa la lógica aquí.`);
+    };
+
+    const filteredSemillas = semillas.filter((semilla) => {
+        const matchesSearch =
+            semilla.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            semilla.tipo.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesType = filterType === 'todos' || semilla.tipo.toLowerCase() === filterType.toLowerCase();
         const matchesStock =
             stockFilter === 'todos' ||
             (stockFilter === 'bajo' && semilla.stock <= 50) ||
             (stockFilter === 'medio' && semilla.stock > 50 && semilla.stock <= 100) ||
             (stockFilter === 'alto' && semilla.stock > 100);
-
         return matchesSearch && matchesType && matchesStock;
     });
 
@@ -58,9 +76,9 @@ function Inventario() {
     return (
         <div className="p-6 max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                <h1 className="text-2xl font-bold text-gray-800">Inventario de Semillas</h1>
-                
+                <h1 className="text-2xl font-bold text-gray-800">Inventario de Semillas de Café</h1>
                 <div className="flex flex-col sm:flex-row gap-3">
+                    {/* Buscador */}
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <Search size={18} className="text-gray-400" />
@@ -73,7 +91,7 @@ function Inventario() {
                             className="pl-10 w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         />
                     </div>
-                    
+
                     {/* Filtro por tipo */}
                     <div className="relative">
                         <button
@@ -89,28 +107,44 @@ function Inventario() {
                         >
                             <div className="py-1">
                                 <button
-                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'todos' ? 'bg-gray-100' : ''}`}
+                                    className={`block w-full text-left px-4 py-2 text-sm ${
+                                        filterType === 'todos' ? 'bg-gray-100' : ''
+                                    }`}
                                     onClick={() => setFilterType('todos')}
                                 >
                                     Todos los tipos
                                 </button>
                                 <button
-                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'hortalizas' ? 'bg-gray-100' : ''}`}
-                                    onClick={() => setFilterType('hortalizas')}
+                                    className={`block w-full text-left px-4 py-2 text-sm ${
+                                        filterType === 'arabica' ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => setFilterType('arabica')}
                                 >
-                                    Hortalizas
+                                    Arábica
                                 </button>
                                 <button
-                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'flores' ? 'bg-gray-100' : ''}`}
-                                    onClick={() => setFilterType('flores')}
+                                    className={`block w-full text-left px-4 py-2 text-sm ${
+                                        filterType === 'robusta' ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => setFilterType('robusta')}
                                 >
-                                    Flores
+                                    Robusta
                                 </button>
                                 <button
-                                    className={`block w-full text-left px-4 py-2 text-sm ${filterType === 'aromaticas' ? 'bg-gray-100' : ''}`}
-                                    onClick={() => setFilterType('aromaticas')}
+                                    className={`block w-full text-left px-4 py-2 text-sm ${
+                                        filterType === 'excelsa' ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => setFilterType('excelsa')}
                                 >
-                                    Aromáticas
+                                    Excelsa
+                                </button>
+                                <button
+                                    className={`block w-full text-left px-4 py-2 text-sm ${
+                                        filterType === 'liberica' ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => setFilterType('liberica')}
+                                >
+                                    Liberica
                                 </button>
                             </div>
                         </div>
@@ -128,13 +162,15 @@ function Inventario() {
                         <option value="alto">Alto (&gt 100)</option>
                     </select>
 
+                    {/* Botón para agregar semillas */}
                     <button className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
                         <Plus size={18} />
                         <span>Agregar</span>
                     </button>
                 </div>
             </div>
-            
+
+            {/* Mensaje de error */}
             {error && (
                 <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md flex items-start gap-3">
                     <AlertTriangle className="text-red-500 mt-0.5" size={20} />
@@ -144,7 +180,8 @@ function Inventario() {
                     </div>
                 </div>
             )}
-            
+
+            {/* Tabla de inventario */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
                 {loading ? (
                     <div className="flex items-center justify-center p-8">
@@ -156,16 +193,26 @@ function Inventario() {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Caducidad</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Nombre
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Tipo
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Stock
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Fecha de Caducidad
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Acciones
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {filteredSemillas.length > 0 ? (
-                                    filteredSemillas.map(semilla => (
+                                    filteredSemillas.map((semilla) => (
                                         <tr key={semilla.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="font-medium text-gray-900">{semilla.nombre}</div>
@@ -182,8 +229,20 @@ function Inventario() {
                                                 {new Date(semilla.fecha_caducidad).toLocaleDateString()}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <button className="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
-                                                <button className="text-red-600 hover:text-red-900">Eliminar</button>
+                                                <button
+                                                    className="text-indigo-600 hover:text-indigo-900 mr-3"
+                                                    onClick={() => handleEdit(semilla.id)}
+                                                >
+                                                    <Edit size={16} />
+                                                    <span>Editar</span>
+                                                </button>
+                                                <button
+                                                    className="text-red-600 hover:text-red-900"
+                                                    onClick={() => handleDelete(semilla.id)}
+                                                >
+                                                    <Trash2 size={16} />
+                                                    <span>Eliminar</span>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))
@@ -198,16 +257,22 @@ function Inventario() {
                         </table>
                     </div>
                 )}
-                
                 <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
                     <div className="text-sm text-gray-500">
-                        Mostrando <span className="font-medium">{filteredSemillas.length}</span> de <span className="font-medium">{semillas.length}</span> semillas
+                        Mostrando <span className="font-medium">{filteredSemillas.length}</span> de{' '}
+                        <span className="font-medium">{semillas.length}</span> semillas
                     </div>
                     <div className="flex gap-2">
-                        <button className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50" disabled>
+                        <button
+                            className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
+                            disabled
+                        >
                             Anterior
                         </button>
-                        <button className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50" disabled>
+                        <button
+                            className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
+                            disabled
+                        >
                             Siguiente
                         </button>
                     </div>

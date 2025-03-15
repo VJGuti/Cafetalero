@@ -15,3 +15,15 @@ exports.registrarVenta = async (req, res) => {
         res.status(500).json({ error: 'Error al registrar la venta' });
     }
 };
+exports.obtenerVentasPorSemilla = async (semillaId) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM ventas WHERE semilla_id = ?', [semillaId]);
+        if (rows.length === 0) {
+            throw new Error('No se encontraron ventas para esta semilla.');
+        }
+        return rows;
+    } catch (error) {
+        console.error('Error al obtener ventas por semilla:', error.message);
+        throw new Error('Error al obtener ventas por semilla.');
+    }
+};

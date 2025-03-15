@@ -9,6 +9,7 @@ const { authenticateToken } = require('./controllers/authController'); // Middle
 const inventarioRoutes = require('./routes/inventarioRoutes');
 const ventasRoutes = require('./routes/ventasRoutes');
 const informesRoutes = require('./routes/informesRoutes');
+const clientesRoutes = require('./routes/clientesRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // Acceder a las variables de entorno
@@ -48,6 +49,7 @@ app.use('/auth', authRoutes); // Rutas de autenticación
 app.use('/api/inventario', authenticateToken, inventarioRoutes); // Proteger rutas de inventario
 app.use('/api/ventas', authenticateToken, ventasRoutes); // Proteger rutas de ventas
 app.use('/api/informes', authenticateToken, informesRoutes); // Proteger rutas de informes
+app.use('/api/clientes', authenticateToken, clientesRoutes );
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend funcionando correctamente' });
 });
