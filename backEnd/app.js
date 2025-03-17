@@ -43,13 +43,12 @@ db.query('SELECT 1 + 1 AS result')
     process.exit(1); // Detener el servidor si no se puede conectar a la base de datos
   });
 
-
 // Rutas
 app.use('/auth', authRoutes); // Rutas de autenticación
 app.use('/api/inventario', authenticateToken, inventarioRoutes); // Proteger rutas de inventario
 app.use('/api/ventas', authenticateToken, ventasRoutes); // Proteger rutas de ventas
 app.use('/api/informes', authenticateToken, informesRoutes); // Proteger rutas de informes
-app.use('/api/clientes', authenticateToken, clientesRoutes );
+app.use('/api/clientes', authenticateToken, clientesRoutes);
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend funcionando correctamente' });
 });

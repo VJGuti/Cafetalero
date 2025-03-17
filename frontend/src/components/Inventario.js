@@ -9,6 +9,8 @@ function Inventario() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('todos'); // Estado para el filtro de tipo
     const [stockFilter, setStockFilter] = useState('todos'); // Estado para el filtro de stock
+    const [currentPage, setCurrentPage] = useState(1); // Estado para la paginación
+    const itemsPerPage = 10; // Número de elementos por página
 
     useEffect(() => {
         fetchSemillas();
@@ -22,14 +24,13 @@ function Inventario() {
             setError(null);
         } catch (error) {
             console.error('Error al cargar semillas:', error);
-            setError('No se pudieron cargar los datos. Intente nuevamente más tarde.');
-            // Datos de ejemplo para visualización en caso de error
-            setSemillas([
-                { id: 1, nombre: 'Café Arábica', tipo: 'Arábica', stock: 120, fecha_caducidad: '2025-06-15' },
-                { id: 2, nombre: 'Café Robusta', tipo: 'Robusta', stock: 85, fecha_caducidad: '2025-04-20' },
-                { id: 3, nombre: 'Café Excelsa', tipo: 'Excelsa', stock: 200, fecha_caducidad: '2025-08-10' },
-                { id: 4, nombre: 'Café Liberica', tipo: 'Liberica', stock: 50, fecha_caducidad: '2025-05-30' },
-            ]);
+    
+            // Mostrar un mensaje de error específico basado en la respuesta del backend
+            if (error.response && error.response.data && error.response.data.error) {
+                setError(error.response.data.error);
+            } else {
+                setError('No se pudieron cargar los datos. Intente nuevamente más tarde.');
+            }
         } finally {
             setLoading(false);
         }
@@ -39,7 +40,7 @@ function Inventario() {
     const handleDelete = async (id) => {
         if (window.confirm('¿Estás seguro de que deseas eliminar esta semilla?')) {
             try {
-                await axios.delete(`http://localhost:3000/api/inventario/semillas/${id}`);
+                await axios.delete(`http://localhost:3000/api/inventario/${id}`); // Corrige la URL
                 setSemillas(semillas.filter((semilla) => semilla.id !== id));
                 alert('Semilla eliminada correctamente.');
             } catch (error) {
@@ -73,8 +74,17 @@ function Inventario() {
         return 'text-green-600 font-medium';
     };
 
+    // Paginación
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredSemillas.slice(indexOfFirstItem, indexOfLastItem);
+
+    const nextPage = () => setCurrentPage((prev) => prev + 1);
+    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+
     return (
         <div className="p-6 max-w-7xl mx-auto">
+            {/* Encabezado */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                 <h1 className="text-2xl font-bold text-gray-800">Inventario de Semillas de Café</h1>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -91,7 +101,6 @@ function Inventario() {
                             className="pl-10 w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         />
                     </div>
-
                     {/* Filtro por tipo */}
                     <div className="relative">
                         <button
@@ -149,7 +158,6 @@ function Inventario() {
                             </div>
                         </div>
                     </div>
-
                     {/* Filtro por stock */}
                     <select
                         value={stockFilter}
@@ -159,9 +167,8 @@ function Inventario() {
                         <option value="todos">Todos los niveles de stock</option>
                         <option value="bajo">Bajo (≤ 50)</option>
                         <option value="medio">Medio (51 - 100)</option>
-                        <option value="alto">Alto (&gt 100)</option>
+                        <option value="alto">Alto (˃ 100)</option>
                     </select>
-
                     {/* Botón para agregar semillas */}
                     <button className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
                         <Plus size={18} />
@@ -189,94 +196,100 @@ function Inventario() {
                         <span>Cargando inventario...</span>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nombre
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Tipo
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Stock
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Fecha de Caducidad
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Acciones
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredSemillas.length > 0 ? (
-                                    filteredSemillas.map((semilla) => (
-                                        <tr key={semilla.id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="font-medium text-gray-900">{semilla.nombre}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    {semilla.tipo}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className={getStockClass(semilla.stock)}>{semilla.stock} unidades</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                                                {new Date(semilla.fecha_caducidad).toLocaleDateString()}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <button
-                                                    className="text-indigo-600 hover:text-indigo-900 mr-3"
-                                                    onClick={() => handleEdit(semilla.id)}
-                                                >
-                                                    <Edit size={16} />
-                                                    <span>Editar</span>
-                                                </button>
-                                                <button
-                                                    className="text-red-600 hover:text-red-900"
-                                                    onClick={() => handleDelete(semilla.id)}
-                                                >
-                                                    <Trash2 size={16} />
-                                                    <span>Eliminar</span>
-                                                </button>
+                    <>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Nombre
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Tipo
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Stock
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Fecha de Caducidad
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {currentItems.length > 0 ? (
+                                        currentItems.map((semilla) => (
+                                            <tr key={semilla.id} className="hover:bg-gray-50">
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="font-medium text-gray-900">{semilla.nombre}</div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                        {semilla.tipo}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className={getStockClass(semilla.stock)}>{semilla.stock} unidades</div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+                                                    {semilla.fecha_caducidad
+                                                        ? new Date(semilla.fecha_caducidad).toLocaleDateString()
+                                                        : 'Sin fecha'}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <button
+                                                        className="text-indigo-600 hover:text-indigo-900 mr-3"
+                                                        onClick={() => handleEdit(semilla.id)}
+                                                    >
+                                                        <Edit size={16} />
+                                                        <span>Editar</span>
+                                                    </button>
+                                                    <button
+                                                        className="text-red-600 hover:text-red-900"
+                                                        onClick={() => handleDelete(semilla.id)}
+                                                    >
+                                                        <Trash2 size={16} />
+                                                        <span>Eliminar</span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                                                No se encontraron semillas que coincidan con los filtros
                                             </td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                                            No se encontraron semillas que coincidan con los filtros
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                            <div className="text-sm text-gray-500">
+                                Mostrando <span className="font-medium">{currentItems.length}</span> de{' '}
+                                <span className="font-medium">{filteredSemillas.length}</span> semillas
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
+                                    onClick={prevPage}
+                                    disabled={currentPage === 1}
+                                >
+                                    Anterior
+                                </button>
+                                <button
+                                    className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
+                                    onClick={nextPage}
+                                    disabled={indexOfLastItem >= filteredSemillas.length}
+                                >
+                                    Siguiente
+                                </button>
+                            </div>
+                        </div>
+                    </>
                 )}
-                <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
-                    <div className="text-sm text-gray-500">
-                        Mostrando <span className="font-medium">{filteredSemillas.length}</span> de{' '}
-                        <span className="font-medium">{semillas.length}</span> semillas
-                    </div>
-                    <div className="flex gap-2">
-                        <button
-                            className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
-                            disabled
-                        >
-                            Anterior
-                        </button>
-                        <button
-                            className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
-                            disabled
-                        >
-                            Siguiente
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     );

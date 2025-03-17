@@ -14,3 +14,13 @@ exports.agregarMateriaPrima = async (nombre, cantidad, unidad_medida) => {
     );
     return result.insertId;
 };
+// Obtener todo el inventario
+exports.obtenerInventario = async () => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM inventario');
+        return rows;
+    } catch (error) {
+        console.error('Error al obtener el inventario:', error.message);
+        throw new Error('Error al obtener el inventario');
+    }
+};

@@ -1,6 +1,6 @@
-const pool = require('../db');
+const { obtenerVentasPorSemilla } = require('../models/ventasModel');
 
-// Registrar una venta
+// Controlador para registrar una venta
 exports.registrarVenta = async (req, res) => {
     const { cliente_id, semilla_id, cantidad_vendida, fecha_venta } = req.body;
 
@@ -15,15 +15,34 @@ exports.registrarVenta = async (req, res) => {
         res.status(500).json({ error: 'Error al registrar la venta' });
     }
 };
-exports.obtenerVentasPorSemilla = async (semillaId) => {
+
+// Controlador para obtener ventas por semilla
+exports.getVentasPorSemilla = async (req, res) => {
+    console.log('Ejecutando getVentasPorSemilla...');
     try {
-        const [rows] = await pool.query('SELECT * FROM ventas WHERE semilla_id = ?', [semillaId]);
-        if (rows.length === 0) {
-            throw new Error('No se encontraron ventas para esta semilla.');
+        const { semilla_id } = req.params;
+
+        // Validar que semilla_id sea un número
+        if (!semilla_id || isNaN(semilla_id)) {
+            return res.status(400).json({ error: 'ID de semilla inválido' });
         }
-        return rows;
+
+        console.log(`Obteniendo ventas para semilla_id: ${semilla_id}`);
+        const ventas = await obtenerVentasPorSemilla(semilla_id);
+
+        if (ventas.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron ventas para esta semilla' });
+        }
+
+        res.status(200).json(ventas);
     } catch (error) {
-        console.error('Error al obtener ventas por semilla:', error.message);
-        throw new Error('Error al obtener ventas por semilla.');
+        console.error('Error en el controlador getVentasPorSemilla:', error.message);
+
+        // Manejar errores específicos
+        if (error.message.includes('ID de semilla inválido')) {
+            return res.status(400).json({ error: 'ID de semilla inválido' });
+        }
+
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 };

@@ -1,4 +1,5 @@
 const semillasModel = require('../models/semillasModel');
+const materiasPrimas = require('../models/materiasPrimasModel')
 const Joi = require('joi');
 const pool = require('../db');
 
