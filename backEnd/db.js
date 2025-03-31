@@ -1,6 +1,5 @@
 const mysql = require('mysql2');
 
-// Crear un pool de conexiones
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -11,11 +10,10 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 console.log('Variables de entorno cargadas:', {
-    DB_HOST: process.env.DB_HOST,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_NAME: process.env.DB_NAME,
+  DB_HOST: process.env.DB_HOST,
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD: process.env.DB_PASSWORD,
+  DB_NAME: process.env.DB_NAME,
 });
 
-// Exportar el pool
-module.exports = pool.promise(); // Usar promesas para facilitar el manejo de consultas
+module.exports = pool.promise(); 

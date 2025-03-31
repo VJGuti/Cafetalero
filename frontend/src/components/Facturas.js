@@ -5,7 +5,7 @@ function Factura({ ventaId }) {
     const descargarFactura = async () => {
         try {
             const response = await axios({
-                url: `http://localhost:3000/api/ventas/${ventaId}/factura`,
+                url: `http://localhost:5000/api/ventas/${ventaId}/factura`,
                 method: 'GET',
                 responseType: 'blob' // Importante para manejar archivos binarios
             });

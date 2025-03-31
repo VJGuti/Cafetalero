@@ -18,7 +18,7 @@ function RegistroVentas() {
 
     // Cargar todas las ventas al montar el componente
     useEffect(() => {
-        axios.get('http://localhost:3000/api/ventas')
+        axios.get('http://localhost:5000/api/ventas')
             .then(response => setVentas(response.data))
             .catch(error => console.error('Error al cargar ventas:', error));
     }, []);

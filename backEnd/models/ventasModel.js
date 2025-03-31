@@ -1,6 +1,5 @@
 const pool = require('../db');
 
-// Registrar una nueva venta
 exports.registrarVenta = async (cliente_id, semilla_id, cantidad, fecha_venta) => {
     try {
         const [result] = await pool.query(
@@ -14,7 +13,6 @@ exports.registrarVenta = async (cliente_id, semilla_id, cantidad, fecha_venta) =
     }
 };
 
-// Obtener todas las ventas
 exports.obtenerVentas = async () => {
     try {
         const [rows] = await pool.query(`
@@ -31,7 +29,6 @@ exports.obtenerVentas = async () => {
     }
 };
 
-// Obtener ventas por semilla
 exports.obtenerVentasPorSemilla = async (semilla_id) => {
     try {
         // Validar que semilla_id sea un número
@@ -43,10 +40,6 @@ exports.obtenerVentasPorSemilla = async (semilla_id) => {
             'SELECT * FROM ventas WHERE semilla_id = ?',
             [semilla_id]
         );
-
-        if (rows.length === 0) {
-            throw new Error('No se encontraron ventas para esta semilla');
-        }
 
         return rows;
     } catch (error) {

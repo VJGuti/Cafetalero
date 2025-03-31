@@ -16,7 +16,7 @@ function Movimientos() {
 
     // Carga inicial de movimientos
     useEffect(() => {
-        axios.get('http://localhost:3000/api/inventario/movimientos')
+        axios.get('http://localhost:5000/api/inventario/movimientos')
             .then(response => setMovimientos(response.data))
             .catch(error => console.error('Error al cargar movimientos:', error));
     }, []);
@@ -28,7 +28,7 @@ function Movimientos() {
 
     const aplicarFiltros = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/inventario/movimientos/filtrar', {
+            const response = await axios.get('http://localhost:5000/api/inventario/movimientos/filtrar', {
                 params: filtros
             });
             setMovimientos(response.data);

@@ -17,7 +17,7 @@ function MonitoreoStock() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3000/api/inventario/movimientos', movimiento);
+            await axios.post('http://localhost:5000/api/inventario/movimientos', movimiento);
             alert('Movimiento registrado correctamente');
             setMovimiento({ semilla_id: '', tipo_movimiento: 'entrada', cantidad: '' });
         } catch (error) {

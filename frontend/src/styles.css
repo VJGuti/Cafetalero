@@ -1,5 +1,9 @@
 /* src/styles.css */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Variables globales */
 :root {
     --primary-color: #795548; /* Color principal de la página */

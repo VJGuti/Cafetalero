@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Chart, BarController, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import apiClient from '../axiosConfig';
 
@@ -8,17 +8,13 @@ function PanelControl() {
     const [alertas, setAlertas] = useState([]);
     const [estadisticas, setEstadisticas] = useState([]);
     const [ventasData, setVentasData] = useState([]);
+    const chartRef = useRef(null);
 
     useEffect(() => {
         // Fetch alerts
         apiClient.get('/api/informes/alertas')
             .then(response => setAlertas(response.data))
             .catch(error => console.error('Error al cargar alertas:', error));
-
-        // Fetch statistics (simulated)
-        apiClient.get('/api/informes/estadisticas')
-            .then(response => setEstadisticas(response.data))
-            .catch(error => console.error('Error al cargar estadísticas:', error));
 
         // Fetch sales data
         apiClient.get('/api/informes/ventas/por-semilla')
@@ -30,7 +26,13 @@ function PanelControl() {
         if (ventasData.length > 0) {
             const ctx = document.getElementById('ventasChart')?.getContext('2d');
             if (ctx) {
-                new Chart(ctx, {
+                // Destruir el gráfico anterior si existe
+                if (chartRef.current) {
+                    chartRef.current.destroy();
+                }
+                
+                // Crear un nuevo gráfico y guardar la referencia
+                chartRef.current = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: ventasData.map(item => item.semilla),
@@ -57,8 +59,15 @@ function PanelControl() {
                 });
             }
         }
+        
+        // Función de limpieza para destruir el gráfico cuando el componente se desmonta
+        return () => {
+            if (chartRef.current) {
+                chartRef.current.destroy();
+            }
+        };
     }, [ventasData]);
-
+  
     return (
         <div className="p-6 max-w-7xl mx-auto">
             <h1 className="text-2xl font-bold text-gray-800">Panel de Control</h1>

@@ -2,17 +2,16 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const informesController = require('../controllers/informesController');
+const { authenticateToken } = require('../middleware/authMiddleware.js');
 
-// Generar informe de inventario
-router.get('/inventario', informesController.generarInformeInventario);
+router.get('/inventario', authenticateToken, informesController.generarInformeInventario);
 
-// Generar informe de movimientos de inventario
-router.get('/movimientos', informesController.generarInformeMovimientos);
+router.get('/movimientos', authenticateToken, informesController.generarInformeMovimientos);
 
-// Obtener ventas por semilla
-router.get('/ventas/por-semilla', informesController.obtenerVentasPorSemilla);
+router.get('/ventas/por-semilla', authenticateToken, informesController.obtenerVentasPorSemilla);
 
-// Generar informe de ventas
-router.get('/ventas', informesController.generarInformeVentas);
+router.get('/ventas', authenticateToken, informesController.generarInformeVentas);
+
+router.get('/alertas', authenticateToken, informesController.obtenerAlertas);
 
 module.exports = router;

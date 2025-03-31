@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from '../axiosConfig';
 import { ShoppingCart, Users, Calendar, DollarSign, TrendingUp } from 'lucide-react';
 
 function Ventas() {
@@ -8,21 +8,22 @@ function Ventas() {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filterTipoSemilla, setFilterTipoSemilla] = useState('todos'); // Filtro por tipo de semilla
+    const [filterTipoSemilla, setFilterTipoSemilla] = useState('todos'); 
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // Obtener ventas
-                const ventasResponse = await axios.get('http://localhost:5000/api/ventas');
+                const ventasResponse = await apiClient.get('/api/informes/ventas');
+                console.log(ventasResponse)
                 setVentas(ventasResponse.data);
 
-                // Obtener clientes
-                const clientesResponse = await axios.get('http://localhost:5000/api/clientes');
+                const clientesResponse = await apiClient.get('/api/clientes/todos'); 
                 setClientes(clientesResponse.data);
 
-                setError(null); // Limpiar errores si las solicitudes son exitosas
+                const ventasPorSemillas = await apiClient.get('/api/informes/ventas/por-semilla')
+
+                setError(null); 
             } catch (err) {
                 console.error('Error al cargar datos:', err.message);
                 setError('No se pudieron cargar los datos. Intente nuevamente más tarde.');
@@ -35,12 +36,12 @@ function Ventas() {
     }, []);
 
     // Filtrar ventas por tipo de semilla
-    const filteredVentas = ventas.filter((venta) => {
-        if (filterTipoSemilla === 'todos') return true;
-        return venta.semilla_tipo.toLowerCase() === filterTipoSemilla.toLowerCase();
-    });
+const filteredVentas = ventas.filter((venta) => {
+    if (filterTipoSemilla === 'todos') return true;
+    return venta.semilla_tipo && venta.semilla_tipo.toLowerCase() === filterTipoSemilla.toLowerCase();
+});
 
-    if (loading) {
+  if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <p className="text-gray-700">Cargando datos...</p>
@@ -178,7 +179,7 @@ function Ventas() {
                                                         {new Date(venta.fecha_venta).toLocaleDateString()}
                                                     </div>
                                                 </td>
-                                                <td>${venta.total.toFixed(2)}</td>
+                                                <td>${venta.cantidad.toFixed(2)}</td>
                                                 <td>{venta.semilla_tipo}</td>
                                                 <td>
                                                     <span

@@ -16,6 +16,25 @@ exports.registrarVenta = async (req, res) => {
     }
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Controlador para obtener ventas por semilla
 exports.getVentasPorSemilla = async (req, res) => {
     console.log('Ejecutando getVentasPorSemilla...');
@@ -30,7 +49,7 @@ exports.getVentasPorSemilla = async (req, res) => {
         console.log(`Obteniendo ventas para semilla_id: ${semilla_id}`);
         const ventas = await obtenerVentasPorSemilla(semilla_id);
 
-        if (ventas.length === 0) {
+        if (!ventas) {
             return res.status(404).json({ error: 'No se encontraron ventas para esta semilla' });
         }
 

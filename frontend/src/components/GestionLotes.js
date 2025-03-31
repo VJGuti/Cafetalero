@@ -7,7 +7,7 @@ function GestionLotes() {
     const [lotes, setLotes] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/inventario/semillas')
+        axios.get('http://localhost:5000/api/inventario/semillas')
             .then(response => setLotes(response.data))
             .catch(error => console.error('Error al cargar lotes:', error));
     }, []);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import apiClient from '../axiosConfig';
 import { Search, Filter, Plus, RefreshCw, AlertTriangle, Edit, Trash2 } from 'lucide-react';
 
 function Inventario() {
@@ -7,25 +8,27 @@ function Inventario() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterType, setFilterType] = useState('todos'); // Estado para el filtro de tipo
-    const [stockFilter, setStockFilter] = useState('todos'); // Estado para el filtro de stock
-    const [currentPage, setCurrentPage] = useState(1); // Estado para la paginación
-    const itemsPerPage = 10; // Número de elementos por página
+    const [filterType, setFilterType] = useState('todos');
+    const [stockFilter, setStockFilter] = useState('todos');
 
     useEffect(() => {
         fetchSemillas();
-    }, []);
+    }, []); 
 
     const fetchSemillas = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:3000/api/inventario/semillas');
-            setSemillas(response.data);
+            const response = await apiClient.get('/api/inventario/semillas');
+
+            if (response.data.semillas) {
+                setSemillas(response.data.semillas);
+            } else {
+                setSemillas(response.data);
+            }
             setError(null);
         } catch (error) {
             console.error('Error al cargar semillas:', error);
     
-            // Mostrar un mensaje de error específico basado en la respuesta del backend
             if (error.response && error.response.data && error.response.data.error) {
                 setError(error.response.data.error);
             } else {
@@ -36,11 +39,10 @@ function Inventario() {
         }
     };
 
-    // Función para eliminar una semilla
     const handleDelete = async (id) => {
         if (window.confirm('¿Estás seguro de que deseas eliminar esta semilla?')) {
             try {
-                await axios.delete(`http://localhost:3000/api/inventario/${id}`); // Corrige la URL
+                await axios.delete(`http://localhost:5000/api/inventario/${id}`);
                 setSemillas(semillas.filter((semilla) => semilla.id !== id));
                 alert('Semilla eliminada correctamente.');
             } catch (error) {
@@ -73,14 +75,6 @@ function Inventario() {
         if (stock <= 100) return 'text-amber-600 font-medium';
         return 'text-green-600 font-medium';
     };
-
-    // Paginación
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredSemillas.slice(indexOfFirstItem, indexOfLastItem);
-
-    const nextPage = () => setCurrentPage((prev) => prev + 1);
-    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
@@ -219,8 +213,8 @@ function Inventario() {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {currentItems.length > 0 ? (
-                                        currentItems.map((semilla) => (
+                                    {filteredSemillas.length > 0 ? (
+                                        filteredSemillas.map((semilla) => (
                                             <tr key={semilla.id} className="hover:bg-gray-50">
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="font-medium text-gray-900">{semilla.nombre}</div>
@@ -239,20 +233,22 @@ function Inventario() {
                                                         : 'Sin fecha'}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    <button
-                                                        className="text-indigo-600 hover:text-indigo-900 mr-3"
-                                                        onClick={() => handleEdit(semilla.id)}
-                                                    >
-                                                        <Edit size={16} />
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button
-                                                        className="text-red-600 hover:text-red-900"
-                                                        onClick={() => handleDelete(semilla.id)}
-                                                    >
-                                                        <Trash2 size={16} />
-                                                        <span>Eliminar</span>
-                                                    </button>
+                                                    <div className="flex items-center">
+                                                        <button
+                                                            className="flex items-center text-indigo-600 hover:text-indigo-900 mr-3"
+                                                            onClick={() => handleEdit(semilla.id)}
+                                                        >
+                                                            <Edit size={16} className="mr-1" />
+                                                            <span>Editar</span>
+                                                        </button>
+                                                        <button
+                                                            className="flex items-center text-red-600 hover:text-red-900"
+                                                            onClick={() => handleDelete(semilla.id)}
+                                                        >
+                                                            <Trash2 size={16} className="mr-1" />
+                                                            <span>Eliminar</span>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))
@@ -268,24 +264,8 @@ function Inventario() {
                         </div>
                         <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
                             <div className="text-sm text-gray-500">
-                                Mostrando <span className="font-medium">{currentItems.length}</span> de{' '}
-                                <span className="font-medium">{filteredSemillas.length}</span> semillas
-                            </div>
-                            <div className="flex gap-2">
-                                <button
-                                    className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
-                                    onClick={prevPage}
-                                    disabled={currentPage === 1}
-                                >
-                                    Anterior
-                                </button>
-                                <button
-                                    className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
-                                    onClick={nextPage}
-                                    disabled={indexOfLastItem >= filteredSemillas.length}
-                                >
-                                    Siguiente
-                                </button>
+                                Mostrando <span className="font-medium">{filteredSemillas.length}</span> de{' '}
+                                <span className="font-medium">{semillas.length}</span> semillas
                             </div>
                         </div>
                     </>

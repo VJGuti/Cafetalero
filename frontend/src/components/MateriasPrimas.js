@@ -7,7 +7,7 @@ function MateriasPrimas() {
     const [nuevaMateria, setNuevaMateria] = useState({ nombre: '', cantidad: '', unidad_medida: '' });
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/materias-primas')
+        axios.get('http://localhost:5000/api/materias-primas')
             .then(response => setMateriasPrimas(response.data))
             .catch(error => console.error('Error al cargar materias primas:', error));
     }, []);

@@ -11,12 +11,12 @@ exports.obtenerSemillas = async () => {
     }
 };
 
-// Filtrar semillas
+
 exports.filtrarSemillas = async (tipo, stockMin, stockMax, fecha_caducidad) => {
     let query = 'SELECT * FROM semillas WHERE 1=1';
     const params = [];
 
-    // Validaciones previas a construir la consulta
+    
     if (stockMin !== undefined && isNaN(stockMin)) {
         throw new Error('El valor de stockMin debe ser un número.');
     }
@@ -27,7 +27,6 @@ exports.filtrarSemillas = async (tipo, stockMin, stockMax, fecha_caducidad) => {
         throw new Error('La fecha de caducidad no es válida.');
     }
 
-    // Construcción dinámica de la consulta
     if (tipo) {
         query += ' AND tipo = ?';
         params.push(tipo);
@@ -55,28 +54,27 @@ exports.filtrarSemillas = async (tipo, stockMin, stockMax, fecha_caducidad) => {
     }
 };
 
-// Obtener semillas paginadas
-exports.obtenerSemillasPaginadas = async (pagina, limite) => {
+exports.contarSemillas = async () => {
     try {
-        // Validaciones
-        if (isNaN(pagina) || pagina < 1) {
-            throw new Error('El número de página debe ser un entero positivo.');
-        }
-        if (isNaN(limite) || limite < 1) {
-            throw new Error('El límite debe ser un entero positivo.');
-        }
+        const [rows] = await pool.query('SELECT COUNT(*) as total FROM semillas');
+        return rows[0].total;
+    } catch (error) {
+        console.error('Error en contarSemillas:', error.message);
+        throw new Error('Error al contar las semillas.');
+    }
+};
 
-        const offset = (pagina - 1) * limite;
-        console.log('Parámetros de paginación:', { pagina, limite, offset });
-
+exports.obtenerSemillasPaginadas = async (offset, limit) => {
+    try {
+        //const offsett = (offset - 1) * limit;
         const [rows] = await pool.query(
-            'SELECT * FROM semillas LIMIT ? OFFSET ?',
-            [limite, offset]
+            'SELECT *, (SELECT COUNT(*) FROM semillas) as total FROM semillas LIMIT ? OFFSET ?;', 
+          [limit, offset]
         );
         return rows;
     } catch (error) {
         console.error('Error en obtenerSemillasPaginadas:', error.message);
-        throw new Error('Error al obtener las semillas paginadas. Verifica los parámetros.');
+        throw new Error('Error al obtener las semillas paginadas.');
     }
 };
 

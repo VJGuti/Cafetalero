@@ -2,14 +2,13 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000', // Base URL del backend
+  baseURL: 'http://localhost:5000', 
 });
 
-// Middleware para agregar el token JWT
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token'); // Obtiene el token del localStorage
+  const token = localStorage.getItem('token'); 
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`; // Agrega el token al encabezado
+    config.headers.Authorization = `Bearer ${token}`; 
   }
   return config;
 }, (error) => {
