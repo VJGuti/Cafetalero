@@ -6,6 +6,7 @@ const semillasModel = require('../models/semillasModel');
 const movimientosModel = require('../models/movimientosModel'); 
 const { authenticateToken } = require('../middleware/authMiddleware.js');
 
+router.put('/semillas/:id', authenticateToken, inventarioController.editarSemilla);
 router.get('/semillas', authenticateToken, inventarioController.obtenerSemillas);
 
 router.post('/semillas', authenticateToken ,inventarioController.agregarSemilla);

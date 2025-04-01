@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import apiClient from '../axiosConfig';
 import { Search, Filter, Plus, RefreshCw, AlertTriangle, Edit, Trash2 } from 'lucide-react';
+import AgregarSemillaCafeForm from './RegistroSemillas.js'
+
 
 function Inventario() {
     const [semillas, setSemillas] = useState([]);
@@ -10,6 +12,14 @@ function Inventario() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('todos');
     const [stockFilter, setStockFilter] = useState('todos');
+    const [editingSemilla, setEditingSemilla] = useState(null);
+    const [mostrarFormulario, setMostrarFormulario] = useState(false);
+    const [formData, setFormData] = useState({
+        nombre: '',
+        tipo: '',
+        stock: 0,
+        fecha_caducidad: ''
+    });
 
     useEffect(() => {
         fetchSemillas();
@@ -52,9 +62,41 @@ function Inventario() {
         }
     };
 
-    // Función para editar una semilla
-    const handleEdit = (id) => {
-        alert(`Editar semilla con ID ${id}. Implementa la lógica aquí.`);
+
+    const handleEdit = (semilla) => {
+        setEditingSemilla(semilla);
+        setFormData({
+            nombre: semilla.nombre,
+            tipo: semilla.tipo,
+            stock: semilla.stock,
+            fecha_caducidad: semilla.fecha_caducidad ? semilla.fecha_caducidad.split('T')[0] : ''
+        });
+    };
+
+
+    const handleUpdate = async () => {
+        try {
+            const response = await apiClient.put(`/api/inventario/semillas/${editingSemilla.id}`, formData);
+            
+            if (response.data.success) {
+
+                setSemillas(semillas.map(semilla => 
+                    semilla.id === editingSemilla.id ? { ...semilla, ...formData } : semilla
+                ));
+
+                setEditingSemilla(null);
+                alert('Semilla actualizada correctamente.');
+            } else {
+                alert(response.data.message || 'No se pudo actualizar la semilla');
+            }
+        } catch (error) {
+            console.error('Error al actualizar semilla:', error);
+            alert('Ocurrió un error al actualizar la semilla.');
+        }
+    };
+
+    const handleAgregarSemillaSuccess = () => {
+        fetchSemillas();
     };
 
     const filteredSemillas = semillas.filter((semilla) => {
@@ -163,8 +205,11 @@ function Inventario() {
                         <option value="medio">Medio (51 - 100)</option>
                         <option value="alto">Alto (˃ 100)</option>
                     </select>
-                    {/* Botón para agregar semillas */}
-                    <button className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                    <button 
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" 
+                        onClick={() => setMostrarFormulario(true)}
+                        data-cy="btn-abrir-agregar-semilla"
+                    >
                         <Plus size={18} />
                         <span>Agregar</span>
                     </button>
@@ -236,7 +281,7 @@ function Inventario() {
                                                     <div className="flex items-center">
                                                         <button
                                                             className="flex items-center text-indigo-600 hover:text-indigo-900 mr-3"
-                                                            onClick={() => handleEdit(semilla.id)}
+                                                            onClick={() => handleEdit(semilla)}
                                                         >
                                                             <Edit size={16} className="mr-1" />
                                                             <span>Editar</span>
@@ -271,6 +316,84 @@ function Inventario() {
                     </>
                 )}
             </div>
+
+            {/* Modal de edición */}
+            {editingSemilla && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                        <h2 className="text-xl font-bold mb-4">Editar Semilla</h2>
+                        
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Nombre</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.nombre}
+                                    onChange={(e) => setFormData({...formData, nombre: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Tipo</label>
+                                <select 
+                                    value={formData.tipo}
+                                    onChange={(e) => setFormData({...formData, tipo: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                >
+                                    <option value="arabica">Arábica</option>
+                                    <option value="robusta">Robusta</option>
+                                    <option value="excelsa">Excelsa</option>
+                                    <option value="liberica">Liberica</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Stock</label>
+                                <input 
+                                    type="number" 
+                                    value={formData.stock}
+                                    onChange={(e) => setFormData({...formData, stock: Number(e.target.value)})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Fecha de Caducidad</label>
+                                <input 
+                                    type="date" 
+                                    value={formData.fecha_caducidad}
+                                    onChange={(e) => setFormData({...formData, fecha_caducidad: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="flex justify-end mt-6 gap-3">
+                            <button 
+                                onClick={() => setEditingSemilla(null)} 
+                                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={handleUpdate} 
+                                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                            >
+                                Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Formulario de Agregar Semilla */}
+            {mostrarFormulario && (
+                <AgregarSemillaCafeForm 
+                    onClose={() => setMostrarFormulario(false)} 
+                    onSuccess={handleAgregarSemillaSuccess} 
+                />
+            )}
         </div>
     );
 }

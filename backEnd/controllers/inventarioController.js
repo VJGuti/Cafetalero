@@ -15,10 +15,32 @@ exports.obtenerSemillas = async (req, res) => {
         const semillas = await semillasModel.obtenerSemillas()
         return res.json(semillas);
     } catch (error) {
-        console.error(error); // Registrar el error para depuración
+        console.error(error); 
         res.status(500).json({ error: 'Error al obtener las semillas' });
     }
 };
+
+exports.editarSemilla = async (req, res) => {
+  try {
+   const { id } = req.params
+   const { error } = semillaSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { nombre, tipo, stock, fecha_caducidad } = req.body; 
+
+    const actualizarSemilla = await semillasModel.editarSemillaPorId(id, {nombre, tipo, stock, fecha_caducidad})
+
+    if(actualizarSemilla.success = true) {
+      return res.status(200).json({message: 'Se ha actualizado la semilla'})
+    }
+
+  } catch (error) {
+    console.error(error); 
+    res.status(500).json({ error: 'Error al obtener las semillas' });
+  }
+}
 
 exports.agregarSemilla = async (req, res) => {
 
@@ -26,7 +48,6 @@ exports.agregarSemilla = async (req, res) => {
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }
-
 
     const { nombre, tipo, stock, fecha_caducidad } = req.body;
 

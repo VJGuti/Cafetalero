@@ -11,6 +11,44 @@ exports.obtenerSemillas = async () => {
     }
 };
 
+exports.editarSemillaPorId = async (id, { nombre, tipo, stock, fecha_caducidad }) => {
+  try {
+    const query = `
+      UPDATE semillas 
+      SET nombre = ?, 
+          tipo = ?, 
+          stock = ?, 
+          fecha_caducidad = ?
+      WHERE id = ?;
+    `;
+    
+    const values = [nombre, tipo, stock, fecha_caducidad, id];
+    
+    const [result] = await pool.query(query, values);
+    
+    if (result.affectedRows > 0) {
+      return { 
+        success: true, 
+        message: 'Semilla actualizada correctamente',
+        affectedRows: result.affectedRows
+      };
+    } else {
+      return { 
+        success: false, 
+        message: 'No se encontró la semilla con el ID especificado'
+      };
+    }
+    
+  } catch (error) {
+    console.error('Error al actualizar la semilla:', error);
+    return {
+      success: false,
+      message: 'Error al actualizar la semilla',
+      error: error.message
+    };
+  }
+};
+
 
 exports.filtrarSemillas = async (tipo, stockMin, stockMax, fecha_caducidad) => {
     let query = 'SELECT * FROM semillas WHERE 1=1';
