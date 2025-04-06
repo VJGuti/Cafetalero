@@ -11,27 +11,23 @@ function PanelControl() {
     const chartRef = useRef(null);
 
     useEffect(() => {
-        // Fetch alerts
-        apiClient.get('/api/informes/alertas')
-            .then(response => setAlertas(response.data))
-            .catch(error => console.error('Error al cargar alertas:', error));
-
-        // Fetch sales data
+        const data = async () => {
+          const responseData = await apiClient.get('/api/informes/alertas')
+          setAlertas(responseData.data)
+        } 
         apiClient.get('/api/informes/ventas/por-semilla')
             .then(response => setVentasData(response.data))
             .catch(error => console.error('Error al cargar datos de ventas:', error));
+    data()
     }, []);
 
     useEffect(() => {
         if (ventasData.length > 0) {
             const ctx = document.getElementById('ventasChart')?.getContext('2d');
             if (ctx) {
-                // Destruir el gráfico anterior si existe
                 if (chartRef.current) {
                     chartRef.current.destroy();
                 }
-                
-                // Crear un nuevo gráfico y guardar la referencia
                 chartRef.current = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -60,7 +56,6 @@ function PanelControl() {
             }
         }
         
-        // Función de limpieza para destruir el gráfico cuando el componente se desmonta
         return () => {
             if (chartRef.current) {
                 chartRef.current.destroy();
@@ -96,12 +91,14 @@ function PanelControl() {
                             <li 
                                 key={alerta.id} 
                                 className={`p-3 rounded-lg border-l-4 ${
-                                    alerta.nivel === 'alto' ? 'border-red-500 bg-red-50' : 
-                                    alerta.nivel === 'medio' ? 'border-amber-500 bg-amber-50' : 
-                                    'border-blue-500 bg-blue-50'
+                                    alerta.stock === 50 ? 'border-red-500 bg-red-50' : 
+                                    alerta.stock === 100 ? 'border-amber-500 bg-amber-50' : 
+                                    //alerta.stock === 500 ? 'border-green-500 bg-green-50' : 
+                                    'border-green-500 bg-green-50'
                                 }`}
                             >
                                 <div className="font-medium">{alerta.tipo}</div>
+                                <div className='font-medium'>{alerta.stock}</div>
                                 <div className="text-sm text-gray-600">{alerta.mensaje}</div>
                             </li>
                         ))}

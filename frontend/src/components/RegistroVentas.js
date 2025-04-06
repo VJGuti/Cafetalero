@@ -1,151 +1,139 @@
-import React, { useEffect, useState } from 'react';
-import apiClient from '../axiosConfig';
-import Factura from './Factura';
+import { useState } from "react"
+import apiClient from "../axiosConfig"
+import { AlertTriangle } from "lucide-react"
 
-function RegistroVentas() {
-    // Estado para almacenar las ventas cargadas desde la API
-    const [ventas, setVentas] = useState([]);
+function RegistroVentaForm({ clientes, semillas, onCancel, onSuccess }) {
+  const [formData, setFormData] = useState({
+    cliente_id: "",
+    semilla_id: "",
+    cantidad: 0,
+    fecha_venta: new Date().toISOString().split("T")[0],
+  })
 
-    // Estado para manejar los datos del formulario de nueva venta
-    const [venta, setVenta] = useState({
-        cliente_id: '',
-        semilla_id: '',
-        cantidad: '',
-        fecha_venta: '',
-        precio_unitario: 0,
-        total: 0
-    });
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-    // Cargar todas las ventas al montar el componente
-    useEffect(() => {
-        axios.get('http://localhost:5000/api/ventas')
-            .then(response => setVentas(response.data))
-            .catch(error => console.error('Error al cargar ventas:', error));
-    }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: name === "cantidad" ? Number(value) : value,
+    })
+  }
 
-    // Manejar cambios en el formulario
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
-        // Calcular el total si se modifica la cantidad o el precio unitario
-        if (name === 'cantidad' || name === 'precio_unitario') {
-            const cantidad = name === 'cantidad' ? parseInt(value, 10) : parseInt(venta.cantidad, 10);
-            const precioUnitario = name === 'precio_unitario' ? parseFloat(value) : parseFloat(venta.precio_unitario);
-            const total = cantidad * precioUnitario;
+    try {
+      // Validate form
+      if (!formData.cliente_id || !formData.semilla_id || formData.cantidad <= 0 || !formData.fecha_venta) {
+        throw new Error("Por favor complete todos los campos requeridos.")
+      }
 
-            setVenta({ ...venta, [name]: value, total });
-        } else {
-            setVenta({ ...venta, [name]: value });
-        }
-    };
+      const response = await apiClient.post("/api/ventas/registrar", formData)
 
-    // Manejar el envío del formulario para registrar una nueva venta
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.post('http://localhost:3000/api/ventas', venta);
-            alert('Venta registrada correctamente');
+      if (response.data && (response.data.success || response.status === 200 || response.status === 201)) {
+        onSuccess()
+      } else {
+        setError(response.data.message || "No se pudo registrar la venta")
+      }
+    } catch (error) {
+      console.error("Error al registrar venta:", error)
+      setError(error.message || "Ocurrió un error al registrar la venta.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-            // Limpiar el formulario después de registrar la venta
-            setVenta({
-                cliente_id: '',
-                semilla_id: '',
-                cantidad: '',
-                fecha_venta: '',
-                precio_unitario: 0,
-                total: 0
-            });
-
-            // Recargar la lista de ventas para reflejar la nueva venta
-            const response = await axios.get('http://localhost:3000/api/ventas');
-            setVentas(response.data);
-        } catch (error) {
-            console.error('Error al registrar venta:', error);
-        }
-    };
-
-    return (
-        <div>
-            {/* Formulario para registrar una nueva venta */}
-            <h2>Registrar Venta</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="number"
-                    name="cliente_id"
-                    placeholder="ID del Cliente"
-                    value={venta.cliente_id}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="number"
-                    name="semilla_id"
-                    placeholder="ID de la Semilla"
-                    value={venta.semilla_id}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="number"
-                    name="cantidad"
-                    placeholder="Cantidad"
-                    value={venta.cantidad}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="number"
-                    name="precio_unitario"
-                    placeholder="Precio Unitario"
-                    value={venta.precio_unitario}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="date"
-                    name="fecha_venta"
-                    value={venta.fecha_venta}
-                    onChange={handleChange}
-                    required
-                />
-                <p>Total: ${venta.total.toFixed(2)}</p>
-                <button type="submit">Finalizar Venta</button>
-            </form>
-
-            {/* Lista de ventas registradas */}
-            <h2>Registro de Ventas</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Semilla</th>
-                        <th>Cantidad</th>
-                        <th>Precio Unitario</th>
-                        <th>Total</th>
-                        <th>Fecha</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {ventas.map(venta => (
-                        <tr key={venta.id}>
-                            <td>{venta.id}</td>
-                            <td>{venta.cliente}</td>
-                            <td>{venta.semilla}</td>
-                            <td>{venta.cantidad}</td>
-                            <td>${venta.precio_unitario.toFixed(2)}</td>
-                            <td>${venta.total.toFixed(2)}</td>
-                            <td>{venta.fecha_venta}</td>
-                            <td>
-                                <Factura ventaId={venta.id} />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="p-3 bg-red-50 border-l-4 border-red-500 rounded-md flex items-start gap-2">
+          <AlertTriangle className="text-red-500 mt-0.5" size={18} />
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
-    );
+      )}
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Cliente *</label>
+        <select
+          name="cliente_id"
+          value={formData.cliente_id}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          required
+        >
+          <option value="">Seleccione un cliente</option>
+          {clientes.map((cliente) => (
+            <option key={cliente.id} value={cliente.id}>
+              {cliente.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Tipo de Semilla *</label>
+        <select
+          name="semilla_id"
+          value={formData.semilla_id}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          required
+        >
+          <option value="">Seleccione una semilla</option>
+          {semillas.map((semilla) => (
+            <option key={semilla.id} value={semilla.id}>
+              {semilla.nombre} - {semilla.tipo} (${semilla.precio_kg}/kg)
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Cantidad (kg) *</label>
+        <input
+          type="number"
+          name="cantidad"
+          value={formData.cantidad}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Fecha de Venta *</label>
+        <input
+          type="date"
+          name="fecha_venta"
+          value={formData.fecha_venta}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
+      <div className="flex justify-end mt-6 gap-3">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+          disabled={loading}
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-green-400"
+          disabled={loading}
+        >
+          {loading ? "Guardando..." : "Registrar Venta"}
+        </button>
+      </div>
+    </form>
+  )
 }
 
-export default RegistroVentas;
+export default RegistroVentaForm

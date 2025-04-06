@@ -13,6 +13,7 @@ function Inventario() {
     const [filterType, setFilterType] = useState('todos');
     const [stockFilter, setStockFilter] = useState('todos');
     const [editingSemilla, setEditingSemilla] = useState(null);
+    const [deletingSemilla, setDeletingSemilla] = useState(null);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const [formData, setFormData] = useState({
         nombre: '',
@@ -49,19 +50,17 @@ function Inventario() {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('¿Estás seguro de que deseas eliminar esta semilla?')) {
-            try {
-                await axios.delete(`http://localhost:5000/api/inventario/${id}`);
-                setSemillas(semillas.filter((semilla) => semilla.id !== id));
-                alert('Semilla eliminada correctamente.');
-            } catch (error) {
-                console.error('Error al eliminar semilla:', error);
-                alert('Ocurrió un error al eliminar la semilla.');
-            }
+    const handleDelete = async () => {
+        try {
+            await apiClient.delete(`/api/inventario/semillas/${deletingSemilla.id}`);
+            setSemillas(semillas.filter((semilla) => semilla.id !== deletingSemilla.id));
+            setDeletingSemilla(null);
+            fetchSemillas();
+        } catch (error) {
+            console.error('Error al eliminar semilla:', error);
+            setError('Ocurrió un error al eliminar la semilla.');
         }
     };
-
 
     const handleEdit = (semilla) => {
         setEditingSemilla(semilla);
@@ -73,25 +72,19 @@ function Inventario() {
         });
     };
 
-
     const handleUpdate = async () => {
         try {
             const response = await apiClient.put(`/api/inventario/semillas/${editingSemilla.id}`, formData);
             
             if (response.data.success) {
-
-                setSemillas(semillas.map(semilla => 
-                    semilla.id === editingSemilla.id ? { ...semilla, ...formData } : semilla
-                ));
-
                 setEditingSemilla(null);
-                alert('Semilla actualizada correctamente.');
+                fetchSemillas();
             } else {
-                alert(response.data.message || 'No se pudo actualizar la semilla');
+                setError(response.data.message || 'No se pudo actualizar la semilla');
             }
         } catch (error) {
             console.error('Error al actualizar semilla:', error);
-            alert('Ocurrió un error al actualizar la semilla.');
+            setError('Ocurrió un error al actualizar la semilla.');
         }
     };
 
@@ -288,7 +281,7 @@ function Inventario() {
                                                         </button>
                                                         <button
                                                             className="flex items-center text-red-600 hover:text-red-900"
-                                                            onClick={() => handleDelete(semilla.id)}
+                                                            onClick={() => setDeletingSemilla(semilla)}
                                                         >
                                                             <Trash2 size={16} className="mr-1" />
                                                             <span>Eliminar</span>
@@ -381,6 +374,35 @@ function Inventario() {
                                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                             >
                                 Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de eliminación */}
+            {deletingSemilla && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                        <h2 className="text-xl font-bold mb-4">Confirmar Eliminación</h2>
+                        
+                        <div className="mb-4">
+                            <p className="text-gray-700">¿Está seguro que desea eliminar la semilla <span className="font-medium">{deletingSemilla.nombre}</span>?</p>
+                            <p className="text-gray-500 mt-2">Esta acción no se puede deshacer.</p>
+                        </div>
+                        
+                        <div className="flex justify-end mt-6 gap-3">
+                            <button 
+                                onClick={() => setDeletingSemilla(null)} 
+                                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={handleDelete} 
+                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                            >
+                                Eliminar
                             </button>
                         </div>
                     </div>
