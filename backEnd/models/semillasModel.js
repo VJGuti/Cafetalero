@@ -145,3 +145,34 @@ exports.agregarSemilla = async (nombre, tipo, stock, fecha_caducidad) => {
         throw new Error('Error al agregar la semilla. Verifica los datos proporcionados.');
     }
 };
+
+exports.eliminarSemilla = async (id) => {
+  try {
+    if (!id || typeof id !== 'string') {
+      throw new Error('Debe ingresar el Id para eliminar');
+    } 
+
+    const [result] = await pool.query('DELETE FROM semillas WHERE id = ? ', [id])
+      if (result.affectedRows > 0) {
+      return { 
+        success: true, 
+        message: 'Semilla eliminada correctamente',
+        affectedRows: result.affectedRows
+      };
+    } else {
+      return { 
+        success: false, 
+        message: 'No se encontró la semilla con el ID especificado'
+      };
+    }   
+
+  } catch (error) {
+    
+  }
+}
+
+
+
+
+
+

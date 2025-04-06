@@ -21,12 +21,7 @@ exports.generarInformeMovimientos = async (req, res) => {
 exports.generarInformeVentas = async (req, res) => {
     try {
         const [rows] = await pool.query(`
-            SELECT v.id, c.nombre AS cliente, s.nombre AS semilla, v.cantidad, v.fecha_venta 
-            FROM ventas v
-            JOIN clientes c ON v.cliente_id = c.id
-            JOIN semillas s ON v.semilla_id = s.id
-            ORDER BY v.fecha_venta DESC
-        `);
+            SELECT v.id, v.cantidad, v.fecha_venta, c.nombre AS cliente_nombre, s.tipo as semilla_tipo FROM ventas v INNER JOIN clientes c ON v.cliente_id = c.id INNER JOIN semillas s ON v.semilla_id = s.id ORDER BY v.fecha_venta ASC;`);
         res.json(rows);
     } catch (error) {
         throw new Error('Error al generar el informe de ventas');

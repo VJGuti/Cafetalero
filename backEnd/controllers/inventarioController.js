@@ -61,3 +61,14 @@ exports.agregarSemilla = async (req, res) => {
     }
 };
 
+exports.eliminarSemilla = async (req, res) => {
+  const { id } = req.params
+  const idDelete = await semillasModel.eliminarSemilla(id)
+  if (idDelete.success === true) {
+    return res.status(200).json({message: `${idDelete.message}` })
+  } else {
+    return res.status(404).json({message: `${idDelete.message}`})
+  }
+
+}
+
